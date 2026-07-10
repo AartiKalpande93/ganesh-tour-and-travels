@@ -1,12 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #3b82f6;
+  --color-primary: #0ea5e9;
+  --color-primary-dark: #0369a1;
+  --color-primary-light: #7dd3fc;
   --color-accent: #f97316;
-  --color-accent-dark: #ea580c;
+  --color-accent-dark: #dc6803;
   --color-accent-light: #fb923c;
+  --color-forest: #15803d;
+  --color-sand: #fff8e7;
+  --color-dark-slate: #1f2937;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html {
@@ -16,6 +23,18 @@ html {
 body {
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  color: #1f2937;
-  background-color: #ffffff;
+  color: var(--color-dark-slate);
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #e8f7ff 0%, #fff8e7 40%, #ffffff 100%);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(14, 165, 233, 0.2);
 }

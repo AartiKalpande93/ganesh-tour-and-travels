@@ -69,12 +69,12 @@ const Contact = () => {
   };
 
   const inputClass = (field) =>
-    `w-full px-4 py-3 rounded-lg border ${
-      errors[field] ? "border-red-500" : "border-gray-300"
-    } focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors`;
+    `w-full px-4 py-3 rounded-[14px] border ${
+      errors[field] ? "border-red-500" : "border-[#CBD5E1]"
+    } bg-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/40 focus:border-[#0EA5E9] transition-colors`;
 
   return (
-    <section id="contact" className="py-20 bg-gray-50">
+    <section id="contact" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle
           title="Contact Us"
@@ -82,8 +82,8 @@ const Contact = () => {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-primary mb-6">Send us a Message</h3>
+          <div className="bg-white rounded-[16px] shadow-2xl p-8">
+            <h3 className="text-2xl font-bold text-[#0F172A] mb-6">Send us a Message</h3>
 
             {submitted && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
@@ -93,7 +93,7 @@ const Contact = () => {
 
             <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-[#475569] mb-1">
                   Name *
                 </label>
                 <input
@@ -109,7 +109,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phone" className="block text-sm font-medium text-[#475569] mb-1">
                   Phone *
                 </label>
                 <input
@@ -119,13 +119,13 @@ const Contact = () => {
                   value={form.phone}
                   onChange={handleChange}
                   className={inputClass("phone")}
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 97638 76734"
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-[#475569] mb-1">
                   Email *
                 </label>
                 <input
@@ -141,7 +141,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="destination" className="block text-sm font-medium text-[#475569] mb-1">
                   Destination *
                 </label>
                 <input
@@ -159,7 +159,7 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="message" className="block text-sm font-medium text-[#475569] mb-1">
                   Message *
                 </label>
                 <textarea
@@ -181,14 +181,14 @@ const Contact = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-primary text-white rounded-2xl p-8 shadow-lg">
+            <div className="bg-[#0369A1] text-white rounded-[16px] p-8 shadow-2xl">
               <h3 className="text-2xl font-bold mb-6">Get in Touch</h3>
               <div className="space-y-5">
                 <div className="flex items-start gap-4">
                   <span className="text-2xl">📞</span>
                   <div>
-                    <p className="font-semibold text-accent">Phone</p>
-                    <a href={`tel:${contactInfo.phone.replace(/\s/g, "")}`} className="text-blue-100 hover:text-white transition-colors">
+                    <p className="font-semibold text-[#F97316]">Phone</p>
+                    <a href={`tel:${contactInfo.phone.replace(/\s/g, "")}`} className="text-[#D9EFFF] hover:text-white transition-colors">
                       {contactInfo.phone}
                     </a>
                   </div>
@@ -196,8 +196,8 @@ const Contact = () => {
                 <div className="flex items-start gap-4">
                   <span className="text-2xl">✉️</span>
                   <div>
-                    <p className="font-semibold text-accent">Email</p>
-                    <a href={`mailto:${contactInfo.email}`} className="text-blue-100 hover:text-white transition-colors">
+                    <p className="font-semibold text-[#F97316]">Email</p>
+                    <a href={`mailto:${contactInfo.email}`} className="text-[#D9EFFF] hover:text-white transition-colors">
                       {contactInfo.email}
                     </a>
                   </div>
@@ -205,8 +205,8 @@ const Contact = () => {
                 <div className="flex items-start gap-4">
                   <span className="text-2xl">📍</span>
                   <div>
-                    <p className="font-semibold text-accent">Address</p>
-                    <p className="text-blue-100">{contactInfo.address}</p>
+                    <p className="font-semibold text-[#F97316]">Address</p>
+                    <p className="text-[#D9EFFF]">{contactInfo.address}</p>
                   </div>
                 </div>
               </div>

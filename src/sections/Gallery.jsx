@@ -3,7 +3,7 @@ import GalleryItem from "../components/GalleryItem";
 import { galleryImages } from "../data/siteData";
 
 const Gallery = () => (
-  <section id="gallery" className="py-20 bg-white">
+  <section id="gallery" className="py-20 bg-[#FFF8E7]">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionTitle
         title="Gallery"

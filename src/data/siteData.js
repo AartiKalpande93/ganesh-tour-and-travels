@@ -149,7 +149,7 @@ export const galleryImages = [
 ];
 
 export const contactInfo = {
-  phone: "+91 98765 43210",
+  phone: "+91 97638 76734",
   email: "info@ganeshtourtravels.com",
   address: "123 Travel Street, Pune, Maharashtra 411001",
   whatsapp: "919876543210",

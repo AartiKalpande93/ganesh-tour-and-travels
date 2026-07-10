@@ -3,7 +3,7 @@ import PackageCard from "../components/PackageCard";
 import { packages } from "../data/siteData";
 
 const Packages = () => (
-  <section id="packages" className="py-20 bg-gray-50">
+  <section id="packages" className="py-20 bg-[#FFF8E7]">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionTitle
         title="Popular Packages"

@@ -20,32 +20,36 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-lg py-3" : "bg-white/95 backdrop-blur-sm py-4"
+        scrolled ? "bg-[#fff8e7] shadow-xl py-3" : "bg-[#fff8e7]/95 backdrop-blur-xl py-4"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <button
             onClick={() => handleNavClick("home")}
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer"
           >
-            <span className="text-2xl md:text-3xl">✈️</span>
+            <img
+              src="/src/assets/image-removebg-preview.png"
+              alt="Ganesh Yatra logo"
+              className="h-12 w-12 rounded-2xl object-contain shadow-sm"
+            />
             <div className="text-left">
-              <span className="block text-lg md:text-xl font-bold text-primary leading-tight">
+              <span className="block text-lg md:text-xl font-bold text-[#0F172A] leading-tight">
                 Ganesh Tour
               </span>
-              <span className="block text-xs md:text-sm font-semibold text-accent leading-tight">
+              <span className="block text-xs md:text-sm font-semibold text-[#15803D] leading-tight">
                 and Travels
               </span>
             </div>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8 text-sm md:text-base">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className="text-gray-700 hover:text-accent font-medium transition-colors duration-200 cursor-pointer"
+                className="text-[#475569] hover:text-[#F97316] font-medium transition-colors duration-200 cursor-pointer"
               >
                 {link.label}
               </button>
@@ -54,28 +58,28 @@ const Header = () => {
 
           <button
             onClick={() => handleNavClick("contact")}
-            className="hidden lg:inline-flex bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+            className="hidden lg:inline-flex bg-[#F97316] hover:bg-[#dc6803] text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-[#F97316]/30 hover:-translate-y-0.5 cursor-pointer"
           >
             Book Now
           </button>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
+            className="lg:hidden flex flex-col gap-1.5 p-2 rounded-lg bg-white/90 shadow-sm border border-[#CBD5E1] cursor-pointer"
             aria-label="Toggle menu"
           >
             <span
-              className={`block w-6 h-0.5 bg-primary transition-all duration-300 ${
+              className={`block w-6 h-0.5 bg-[#0EA5E9] transition-all duration-300 ${
                 isOpen ? "rotate-45 translate-y-2" : ""
               }`}
             />
             <span
-              className={`block w-6 h-0.5 bg-primary transition-all duration-300 ${
+              className={`block w-6 h-0.5 bg-[#0EA5E9] transition-all duration-300 ${
                 isOpen ? "opacity-0" : ""
               }`}
             />
             <span
-              className={`block w-6 h-0.5 bg-primary transition-all duration-300 ${
+              className={`block w-6 h-0.5 bg-[#0EA5E9] transition-all duration-300 ${
                 isOpen ? "-rotate-45 -translate-y-2" : ""
               }`}
             />
@@ -87,19 +91,19 @@ const Header = () => {
             isOpen ? "max-h-96 mt-4 pb-4" : "max-h-0"
           }`}
         >
-          <div className="flex flex-col gap-3 border-t border-gray-100 pt-4">
+          <div className="flex flex-col gap-3 border border-[#CBD5E1] bg-white/95 rounded-3xl p-4 shadow-lg">
             {navLinks.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className="text-gray-700 hover:text-accent font-medium py-2 text-left transition-colors cursor-pointer"
+                className="text-[#1F2937] hover:text-[#F97316] font-medium py-3 text-left transition-colors cursor-pointer"
               >
                 {link.label}
               </button>
             ))}
             <button
               onClick={() => handleNavClick("contact")}
-              className="bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-lg font-semibold transition-colors mt-2 cursor-pointer"
+              className="bg-[#F97316] hover:bg-[#dc6803] text-white px-5 py-3 rounded-full font-semibold transition-all mt-2 cursor-pointer"
             >
               Book Now
             </button>

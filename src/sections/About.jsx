@@ -1,7 +1,7 @@
 import SectionTitle from "../components/SectionTitle";
 
 const About = () => (
-  <section id="about" className="py-20 bg-gray-50">
+  <section id="about" className="py-20 bg-[#FFF8E7]">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionTitle
         title="About Us"
@@ -15,26 +15,24 @@ const About = () => (
             alt="Travel team"
             className="rounded-2xl shadow-xl w-full h-80 lg:h-96 object-cover"
           />
-          <div className="absolute -bottom-6 -right-6 bg-accent text-white p-6 rounded-2xl shadow-lg hidden sm:block">
+          <div className="absolute -bottom-6 -right-6 bg-[#15803D] text-white p-6 rounded-[16px] shadow-2xl hidden sm:block">
             <p className="text-3xl font-bold">10+</p>
             <p className="text-sm font-medium">Years of Experience</p>
           </div>
         </div>
 
         <div>
-          <h3 className="text-2xl font-bold text-primary mb-4">
+          <h3 className="text-2xl font-bold text-[#0F172A] mb-4">
             Your Journey, Our Passion
           </h3>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            Ganesh Tour and Travels is a leading travel agency dedicated to making
-            your journeys memorable, comfortable, and hassle-free. Whether you are
-            planning a family vacation, a spiritual pilgrimage, or a corporate retreat,
-            we have the perfect package for you.
+          <p className="text-[#475569] leading-relaxed mb-4">
+            At Ganesh Tour and Travels, we turn every trip into a memorable experience. 
+            Whether you're planning a family vacation, a spiritual tour, or a corporate journey, we provide reliable, comfortable, and affordable travel services tailored to your needs.
           </p>
-          <p className="text-gray-600 leading-relaxed mb-8">
-            With years of experience in the travel industry, we pride ourselves on
-            delivering exceptional service at affordable prices. From the moment you
-            contact us until you return home, we are with you every step of the way.
+          <p className="text-[#475569] leading-relaxed mb-8">
+           With a commitment to quality, safety, and customer satisfaction, our experienced team ensures a smooth travel experience from start to finish. 
+           Travel with confidence and create unforgettable memories with **Ganesh Tour and Travels**.
+
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -46,10 +44,10 @@ const About = () => (
             ].map((item) => (
               <div
                 key={item.text}
-                className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                className="flex items-center gap-3 bg-white p-4 rounded-[16px] shadow-lg hover:shadow-2xl transition-shadow"
               >
                 <span className="text-2xl">{item.icon}</span>
-                <span className="font-semibold text-primary">{item.text}</span>
+                <span className="font-semibold text-[#0EA5E9]">{item.text}</span>
               </div>
             ))}
           </div>
