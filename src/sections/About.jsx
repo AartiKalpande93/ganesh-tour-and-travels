@@ -1,4 +1,5 @@
 import SectionTitle from "../components/SectionTitle";
+import teamImg from "../assets/team.jpeg";
 
 const About = () => (
   <section id="about" className="py-20 bg-[#FFF8E7]">
@@ -11,7 +12,7 @@ const About = () => (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="relative">
           <img
-            src="https://images.unsplash.com/photo-1527631489985-52689da1abf8?w=700&q=80"
+            src={teamImg}
             alt="Travel team"
             className="rounded-2xl shadow-xl w-full h-80 lg:h-96 object-cover"
           />
@@ -30,9 +31,8 @@ const About = () => (
             Whether you're planning a family vacation, a spiritual tour, or a corporate journey, we provide reliable, comfortable, and affordable travel services tailored to your needs.
           </p>
           <p className="text-[#475569] leading-relaxed mb-8">
-           With a commitment to quality, safety, and customer satisfaction, our experienced team ensures a smooth travel experience from start to finish. 
-           Travel with confidence and create unforgettable memories with **Ganesh Tour and Travels**.
-
+            With a commitment to quality, safety, and customer satisfaction, our experienced team ensures a smooth travel experience from start to finish. 
+            Travel with confidence and create unforgettable memories with <span className="font-bold text-[#0F172A]">Ganesh Tour and Travels</span>.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -58,3 +58,4 @@ const About = () => (
 );
 
 export default About;
+
