@@ -43,7 +43,7 @@ const Header = () => {
             className="flex items-center gap-3 cursor-pointer"
           >
             <img
-              src="/src/assets/image-removebg-preview.png"
+              src="\src\assets\image-removebg-preview.jpeg"
               alt="Ganesh Yatra logo"
               className="h-12 w-12 rounded-2xl object-contain shadow-sm"
             />
