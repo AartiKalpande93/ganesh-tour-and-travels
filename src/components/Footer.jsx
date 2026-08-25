@@ -13,7 +13,7 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               <span className="text-3xl">✈️</span>
               <div>
-                <h3 className="text-xl font-extrabold tracking-wide">guruvarya Tour</h3>
+                <h3 className="text-xl font-extrabold tracking-wide">Ganesh Yatra</h3>
                 <span className="text-xs font-semibold text-teal-200 block uppercase tracking-wider">Tourism</span>
               </div>
             </div>
@@ -114,7 +114,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-teal-400/30 pt-6 text-center text-teal-100 text-xs">
-          <p>&copy; {new Date().getFullYear()} guruvarya Tour Tourism. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Ganesh Yatra Tourism. All rights reserved.</p>
         </div>
       </div>
     </footer>

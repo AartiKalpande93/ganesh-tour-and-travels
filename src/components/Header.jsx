@@ -44,12 +44,12 @@ const Header = () => {
           >
             <img
               src="/src/assets/image-removebg-preview.png"
-              alt="guruvarya Tour logo"
+              alt="Ganesh Yatra logo"
               className="h-12 w-12 rounded-2xl object-contain shadow-sm"
             />
             <div className="text-left">
               <span className="block text-lg md:text-xl font-bold text-teal-800 leading-tight font-serif">
-                guruvarya Tour
+                Ganesh Yatra
               </span>
               <span className="block text-xs md:text-sm font-bold text-[#27374D] leading-tight uppercase tracking-wider">
                 Tourism
