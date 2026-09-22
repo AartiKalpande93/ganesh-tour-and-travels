@@ -90,11 +90,11 @@ export const galleryImages = [
     alt: "Hill station",
   },
   {
-    src: "https://images.unsplash.com/photo-1476514525535-07fb3b4dce5f?w=500&q=80",
+    src: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80",
     alt: "Travel adventure",
   },
   {
-    src: "https://images.unsplash.com/photo-1530789253808-9058f376729e?w=500&q=80",
+    src: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
     alt: "City skyline",
   },
   {
