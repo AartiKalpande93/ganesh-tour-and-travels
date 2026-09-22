@@ -153,8 +153,8 @@ const TourDetailsModal = ({ tour, onClose }) => {
 
   if (!tour) return null;
 
-  // Fetch or generate details for this specific package
-  const customInfo = defaultTourData[tour.title] || {
+  // Prefer API package fields; fall back to curated defaults by title
+  const fallback = defaultTourData[tour.title] || {
     duration: "7 Days / 6 Nights",
     destinations: [tour.title, "Local Highlights", "Scenic Viewpoints", "Cultural Landmarks"],
     highlights: [
@@ -195,6 +195,23 @@ const TourDetailsModal = ({ tour, onClose }) => {
       "Sunscreen lotion, sunglasses & basic toiletries",
       "Personal medications & camera"
     ]
+  };
+
+  const customInfo = {
+    ...fallback,
+    duration: tour.duration || fallback.duration,
+    destinations: tour.destination
+      ? String(tour.destination).split(/,| & /).map((d) => d.trim()).filter(Boolean)
+      : fallback.destinations,
+    highlights: Array.isArray(tour.highlights) && tour.highlights.length > 0
+      ? tour.highlights
+      : fallback.highlights,
+    inclusions: Array.isArray(tour.inclusions) && tour.inclusions.length > 0
+      ? tour.inclusions
+      : fallback.inclusions,
+    exclusions: Array.isArray(tour.exclusions) && tour.exclusions.length > 0
+      ? tour.exclusions
+      : fallback.exclusions,
   };
 
   const formattedPrice = typeof tour.price === 'number' ? `₹${tour.price.toLocaleString('en-IN')}/-` : tour.price;

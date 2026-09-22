@@ -1,8 +1,17 @@
 import { navLinks, services, contactInfo } from "../data/siteData";
 import { scrollToSection } from "../utils/scrollTo";
+import { useLanguage } from "../context/LanguageContext";
 
-const Footer = () => {
-  const handleClick = (id) => scrollToSection(id);
+const Footer = ({ setActiveTab }) => {
+  const { t } = useLanguage();
+  const handleClick = (id) => {
+    if (setActiveTab) {
+      setActiveTab(id);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      scrollToSection(id);
+    }
+  };
 
   return (
     <footer className="bg-[linear-gradient(35deg,#008080,#0d9488)] text-white pt-16 pb-8 border-t border-teal-600">
@@ -35,7 +44,7 @@ const Footer = () => {
                     onClick={() => handleClick(link.id)}
                     className="text-teal-50 hover:text-white transition-colors cursor-pointer"
                   >
-                    {link.label}
+                    {t.nav[link.id]}
                   </button>
                 </li>
               ))}

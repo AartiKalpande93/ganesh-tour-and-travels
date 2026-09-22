@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend": "npm run db:start --prefix backend && npm run dev --prefix backend",
+    "seed": "npm run seed --prefix backend",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"

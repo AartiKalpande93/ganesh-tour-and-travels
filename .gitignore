@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# Environment & secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Local portable MongoDB data/binary
+backend/.mongodb/
+backend/.mongo-data/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

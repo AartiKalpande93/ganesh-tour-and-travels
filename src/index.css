@@ -22,10 +22,37 @@ html {
 
 body {
   margin: 0;
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: "Outfit", "Mukta", "Segoe UI", system-ui, sans-serif;
   color: var(--color-dark-slate);
   min-height: 100vh;
-  background: radial-gradient(circle at top, #e8f7ff 0%, #fff8e7 40%, #ffffff 100%);
+  background: #ffffff;
+}
+
+.font-display {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+.font-script {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.font-script-mr {
+  font-family: "Tiro Devanagari Marathi", serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.font-mr {
+  font-family: "Mukta", "Noto Sans Devanagari", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.12;
 }
 
 button,

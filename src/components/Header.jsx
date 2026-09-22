@@ -1,129 +1,137 @@
-import { useState, useEffect } from "react";
-import { navLinks } from "../data/siteData";
-import { scrollToSection } from "../utils/scrollTo";
+import { useState } from "react";
+import { navLinks, contactInfo } from "../data/siteData";
+import { useLanguage } from "../context/LanguageContext";
+import logo from "../assets/image-removebg-preview.jpeg";
 
-const Header = () => {
+const Header = ({ activeTab, setActiveTab }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { lang, setLang, t } = useLanguage();
 
   const handleNavClick = (id) => {
-    scrollToSection(id);
+    setActiveTab(id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsOpen(false);
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md" : "bg-white/95 backdrop-blur-md"
-      }`}
-    >
-      {/* Top Banner Bar */}
-      <div className="bg-[linear-gradient(35deg,#0d9488,#ffffff)] text-teal-950 text-[11px] sm:text-xs py-2 px-4 sm:px-6 lg:px-8 border-b border-teal-100 font-semibold shadow-sm">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1">
-          <span className="italic text-center sm:text-left text-teal-900">
-            "चला सहलीला, गणेश टूरिझम आहे ना साथीला!"
+    <header className="sticky top-0 z-50 bg-[#1a120d] text-[#f6efe6] shadow-md">
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <button
+          onClick={() => handleNavClick("home")}
+          className="flex min-w-0 items-center gap-2.5 cursor-pointer"
+        >
+          <img
+            src={logo}
+            alt="Ganesh Yatra logo"
+            className="h-11 w-11 shrink-0 rounded-full object-cover"
+          />
+          <span className="text-left leading-none">
+            <span
+              className={`block text-[15px] font-extrabold tracking-[0.12em] text-white uppercase ${
+                lang === "mr" ? "font-mr tracking-normal normal-case text-lg" : ""
+              }`}
+            >
+              {t.brand}
+            </span>
+            <span
+              className={`mt-1 block text-[10px] font-semibold tracking-[0.28em] text-[#e7c9a4] uppercase ${
+                lang === "mr" ? "font-mr tracking-normal normal-case text-xs" : ""
+              }`}
+            >
+              {t.brandSub}
+            </span>
           </span>
-          <div className="flex gap-4 text-[10px] sm:text-xs font-bold text-teal-900">
-            <a href="tel:+917058255525" className="hover:text-teal-700 transition-colors">📞 +91 70582 55525</a>
-            <a href="mailto:travelganeshyaatra@gmail.com" className="hover:text-teal-700 transition-colors">✉️ travelganeshyaatra@gmail.com</a>
+        </button>
+
+        <nav className="hidden items-center gap-6 lg:flex">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => handleNavClick(link.id)}
+              className={`text-sm font-medium transition cursor-pointer ${
+                activeTab === link.id ? "text-[#ff7a18]" : "text-[#f3eadf] hover:text-white"
+              }`}
+            >
+              {t.nav[link.id]}
+            </button>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-1.5 text-sm font-semibold">
+            <button
+              type="button"
+              onClick={() => setLang("mr")}
+              className={`cursor-pointer ${lang === "mr" ? "text-[#ff7a18]" : "text-[#f3eadf] hover:text-white"}`}
+            >
+              मराठी
+            </button>
+            <span className="text-white/30">|</span>
+            <button
+              type="button"
+              onClick={() => setLang("en")}
+              className={`cursor-pointer ${lang === "en" ? "text-[#ff7a18]" : "text-[#f3eadf] hover:text-white"}`}
+            >
+              EN
+            </button>
           </div>
-        </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <button
-            onClick={() => handleNavClick("home")}
-            className="flex items-center gap-3 cursor-pointer"
+          <a
+            href={`tel:${contactInfo.phones[0].replace(/[\s+]/g, "")}`}
+            className="hidden items-center gap-1.5 text-sm font-semibold text-[#f6efe6] xl:inline-flex"
           >
-            <img
-              src="\src\assets\image-removebg-preview.jpeg"
-              alt="Ganesh Yatra logo"
-              className="h-12 w-12 rounded-2xl object-contain shadow-sm"
-            />
-            <div className="text-left">
-              <span className="block text-lg md:text-xl font-bold text-teal-800 leading-tight font-serif">
-                Ganesh Yatra
-              </span>
-              <span className="block text-xs md:text-sm font-bold text-[#27374D] leading-tight uppercase tracking-wider">
-                Tourism
-              </span>
-            </div>
-          </button>
-
-          {/* Main Nav */}
-          <nav className="hidden lg:flex items-center gap-2 bg-[linear-gradient(35deg,#ffffff,#e6f4f4)] rounded-full px-6 py-2 border border-teal-100 shadow-sm">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => handleNavClick(link.id)}
-                className="text-[#27374D] hover:text-white hover:bg-teal-700 px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
-          </nav>
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 3.5h3l1.5 4-2 1.2a12 12 0 0 0 6.3 6.3l1.2-2 4 1.5v3A2 2 0 0 1 18.5 19 15 15 0 0 1 5 5.5a2 2 0 0 1 1.5-2z" />
+            </svg>
+            {contactInfo.phones[0].replace("+91 ", "")}
+          </a>
 
           <button
             onClick={() => handleNavClick("contact")}
-            className="hidden lg:inline-flex bg-[linear-gradient(35deg,#1e293b,#0d9488)] hover:bg-[linear-gradient(35deg,#0d9488,#ffffff)] text-white hover:text-slate-900 px-6 py-2.5 rounded-full font-semibold transition-all duration-300 shadow-md border border-[#27374D] hover:-translate-y-0.5 cursor-pointer text-sm"
+            className="hidden rounded-md bg-[#ff7a18] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#ff8a33] cursor-pointer sm:inline-flex"
           >
-            Book Now
+            {t.bookNow}
           </button>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden flex flex-col gap-1.5 p-2 rounded-lg bg-white shadow-sm border border-teal-200 cursor-pointer"
+            className="flex flex-col gap-1.5 p-2 lg:hidden cursor-pointer"
             aria-label="Toggle menu"
           >
-            <span
-              className={`block w-6 h-0.5 bg-teal-700 transition-all duration-300 ${
-                isOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-teal-700 transition-all duration-300 ${
-                isOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block w-6 h-0.5 bg-teal-700 transition-all duration-300 ${
-                isOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            />
+            <span className={`block h-0.5 w-6 bg-white transition ${isOpen ? "translate-y-2 rotate-45" : ""}`} />
+            <span className={`block h-0.5 w-6 bg-white transition ${isOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-0.5 w-6 bg-white transition ${isOpen ? "-translate-y-2 -rotate-45" : ""}`} />
           </button>
         </div>
-
-        <nav
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            isOpen ? "max-h-96 mt-4 pb-4" : "max-h-0"
-          }`}
-        >
-          <div className="flex flex-col gap-2 border border-teal-100 bg-white/95 rounded-3xl p-4 shadow-lg">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => handleNavClick(link.id)}
-                className="text-[#27374D] hover:bg-teal-700 hover:text-white px-4 py-2.5 rounded-xl font-medium text-left transition-colors cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
-            <button
-              onClick={() => handleNavClick("contact")}
-              className="bg-[linear-gradient(35deg,#1e293b,#0d9488)] text-white px-5 py-3 rounded-full font-semibold transition-all mt-2 cursor-pointer text-center"
-            >
-              Book Now
-            </button>
-          </div>
-        </nav>
       </div>
+
+      <nav className={`lg:hidden overflow-hidden bg-[#241910] transition-all ${isOpen ? "max-h-96 border-t border-white/10" : "max-h-0"}`}>
+        <div className="flex flex-col gap-1 px-4 py-3">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => handleNavClick(link.id)}
+              className={`rounded-lg px-3 py-2.5 text-left text-sm font-medium cursor-pointer ${
+                activeTab === link.id ? "bg-white/10 text-[#ff7a18]" : "text-[#f3eadf]"
+              }`}
+            >
+              {t.nav[link.id]}
+            </button>
+          ))}
+          <a
+            href={`tel:${contactInfo.phones[0].replace(/[\s+]/g, "")}`}
+            className="px-3 py-2 text-sm font-semibold text-[#f6efe6]"
+          >
+            {contactInfo.phones[0]}
+          </a>
+          <button
+            onClick={() => handleNavClick("contact")}
+            className="mt-1 rounded-md bg-[#ff7a18] px-4 py-2.5 text-sm font-bold text-white cursor-pointer"
+          >
+            {t.bookNow}
+          </button>
+        </div>
+      </nav>
     </header>
   );
 };

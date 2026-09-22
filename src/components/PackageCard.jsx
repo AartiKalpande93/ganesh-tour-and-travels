@@ -1,13 +1,51 @@
 import Button from "./Button";
 import { scrollToSection } from "../utils/scrollTo";
 
-const PackageCard = ({ title, description, price, image, date, note, type, year, category, onViewDetails }) => {
+const PackageCard = ({
+  id,
+  _id,
+  title,
+  description,
+  price,
+  image,
+  date,
+  note,
+  type,
+  year,
+  category,
+  destination,
+  duration,
+  highlights,
+  inclusions,
+  exclusions,
+  available,
+  onViewDetails,
+}) => {
   const handleViewDetails = () => {
+    const tourData = {
+      id: id || _id,
+      title,
+      description,
+      price,
+      image,
+      date,
+      note,
+      type,
+      year,
+      category,
+      destination,
+      duration,
+      highlights,
+      inclusions,
+      exclusions,
+      available,
+    };
+
     if (onViewDetails) {
-      onViewDetails({ title, description, price, image, date, note, type, year, category });
+      onViewDetails(tourData);
     } else {
       const event = new CustomEvent("view-tour-details", {
-        detail: { title, description, price, image, date, note, type, year, category }
+        detail: tourData,
       });
       window.dispatchEvent(event);
     }

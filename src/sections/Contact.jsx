@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SectionTitle from "../components/SectionTitle";
 import Button from "../components/Button";
 import { contactInfo } from "../data/siteData";
+import { submitContactForm } from "../api/contact";
 
 const initialForm = {
   name: "",
@@ -15,6 +16,8 @@ const Contact = () => {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const handleSelectPackage = (e) => {
@@ -66,15 +69,48 @@ const Contact = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+    if (submitError) {
+      setSubmitError("");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      // Form submission simulation (can be connected to backend/email API)
-      setSubmitted(true);
-      setForm(initialForm);
-      setTimeout(() => setSubmitted(false), 5000);
+    setSubmitError("");
+
+    if (!validate()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const resData = await submitContactForm({
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        destination: form.destination.trim(),
+        message: form.message.trim(),
+      });
+
+      if (resData.success) {
+        setSubmitted(true);
+        setForm(initialForm);
+        setTimeout(() => setSubmitted(false), 7000);
+      } else {
+        setSubmitError(resData.message || "Failed to send message. Please try again or contact us directly.");
+      }
+    } catch (err) {
+      if (err.errors?.length) {
+        const fieldErrors = {};
+        err.errors.forEach((item) => {
+          if (item.field) fieldErrors[item.field] = item.message;
+        });
+        setErrors((prev) => ({ ...prev, ...fieldErrors }));
+      }
+      setSubmitError(err.message || "Network error occurred. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -106,8 +142,16 @@ const Contact = () => {
             <h3 className="text-2xl font-bold text-[#0F172A] mb-6">Send us a Message</h3>
 
             {submitted && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
-                Thank you! We will get back to you shortly.
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg font-medium text-sm flex items-center gap-2">
+                <span>✅</span>
+                <span>Thank you! Your message has been sent successfully. We will contact you soon.</span>
+              </div>
+            )}
+
+            {submitError && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg font-medium text-sm flex items-center gap-2">
+                <span>❌</span>
+                <span>{submitError}</span>
               </div>
             )}
 
@@ -124,6 +168,7 @@ const Contact = () => {
                   onChange={handleChange}
                   className={inputClass("name")}
                   placeholder="Your full name"
+                  disabled={isSubmitting}
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
@@ -140,6 +185,7 @@ const Contact = () => {
                   onChange={handleChange}
                   className={inputClass("phone")}
                   placeholder="Your phone number"
+                  disabled={isSubmitting}
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
@@ -156,6 +202,7 @@ const Contact = () => {
                   onChange={handleChange}
                   className={inputClass("email")}
                   placeholder="you@example.com"
+                  disabled={isSubmitting}
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
@@ -172,6 +219,7 @@ const Contact = () => {
                   onChange={handleChange}
                   className={inputClass("destination")}
                   placeholder="Where do you want to go?"
+                  disabled={isSubmitting}
                 />
                 {errors.destination && (
                   <p className="text-red-500 text-sm mt-1">{errors.destination}</p>
@@ -190,12 +238,17 @@ const Contact = () => {
                   onChange={handleChange}
                   className={inputClass("message")}
                   placeholder="Tell us about your travel plans..."
+                  disabled={isSubmitting}
                 />
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
 
-              <Button type="submit" className="w-full justify-center cursor-pointer">
-                Send Message
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Sending Message..." : "Send Message"}
               </Button>
             </form>
           </div>

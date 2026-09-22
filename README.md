@@ -1,16 +1,69 @@
-# React + Vite
+# Ganesh Tour and Travels
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React (Vite) frontend + Express/MongoDB/Nodemailer backend.
 
-Currently, two official plugins are available:
+## Quick start (2 terminals)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Terminal 1 — Backend
 
-## React Compiler
+```bash
+cd backend
+npm install
+npm run db:start
+npm run seed
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+API: http://localhost:5000/api/health
 
-## Expanding the Oxlint configuration
+### Terminal 2 — Frontend
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
+
+Site: http://localhost:5173
+
+The frontend calls the Express API at `http://localhost:5000/api` (see `.env` → `VITE_API_URL`).
+
+## Email setup (required for Contact form)
+
+Contact emails are sent with **Nodemailer + Gmail SMTP** to `aartikalpande93@gmail.com`.
+
+1. Open https://myaccount.google.com/apppasswords (2-Step Verification must be ON)
+2. Create an App Password for Mail
+3. Edit `backend/.env`:
+
+```env
+SMTP_USER=aartikalpande93@gmail.com
+SMTP_PASS=your16charapppass
+SMTP_FROM_EMAIL=aartikalpande93@gmail.com
+CONTACT_TO_EMAIL=aartikalpande93@gmail.com
+```
+
+4. Restart the backend, then verify:
+
+```bash
+cd backend
+npm run test:email
+```
+
+Until `SMTP_PASS` is set, `POST /api/contact` correctly returns **503** (email not configured). It will **not** fake a success response.
+
+## API
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/api/contact` | Validate → save MongoDB → send email |
+| GET | `/api/packages` | List packages |
+| GET | `/api/packages/:id` | Single package |
+| POST | `/api/packages` | Create |
+| PUT | `/api/packages/:id` | Update |
+| DELETE | `/api/packages/:id` | Delete |
+
+## Notes
+
+- Portable MongoDB binary lives in `backend/.mongodb` (gitignored); data in `backend/.mongo-data`
+- SMTP secrets stay only in `backend/.env`
+- Vite proxy `/api` → `:5000` remains available as a fallback
