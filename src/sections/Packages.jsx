@@ -3,8 +3,37 @@ import SectionTitle from "../components/SectionTitle";
 import PackageCard from "../components/PackageCard";
 import TourDetailsModal from "../components/TourDetailsModal";
 import { fetchPackages } from "../api/packages";
+import { useLanguage } from "../context/LanguageContext";
+import { seedPackages } from "../../backend/src/seed/packages.js";
+import { comparePackages } from "../../backend/src/utils/packageOrder.js";
+
+const localPackages = seedPackages.map((pkg, index) => ({
+  ...pkg,
+  id: `seed-${index}`,
+}));
 
 const FAMILY_PATTERN = /kerala|rajasthan|rajsthan|gujarat|himachal|andaman|kashmir/i;
+const MONTH_NUMBERS = {
+  JAN: 1,
+  FEB: 2,
+  MAR: 3,
+  APR: 4,
+  MAY: 5,
+  JUN: 6,
+  JUL: 7,
+  AUG: 8,
+  SEP: 9,
+  OCT: 10,
+  NOV: 11,
+  DEC: 12,
+};
+
+const getDepartureMonth = (date) => {
+  const monthName = String(date || "").match(
+    /\b(JAN(?:UARY)?|FEB(?:RUARY)?|MAR(?:CH)?|APR(?:IL)?|MAY|JUN(?:E)?|JUL(?:Y)?|AUG(?:UST)?|SEP(?:TEMBER)?|OCT(?:OBER)?|NOV(?:EMBER)?|DEC(?:EMBER)?)\b/i
+  )?.[0];
+  return monthName ? MONTH_NUMBERS[monthName.slice(0, 3).toUpperCase()] : null;
+};
 
 const parseDays = (duration) => {
   const match = String(duration || "").match(/(\d+)/);
@@ -38,10 +67,11 @@ const matchesBudget = (price, key) => {
 };
 
 const Packages = () => {
+  const { lang } = useLanguage();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeSeason, setActiveSeason] = useState("all");
   const [activeType, setActiveType] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("default");
@@ -50,6 +80,7 @@ const Packages = () => {
   const [durationKey, setDurationKey] = useState("");
   const [budgetKey, setBudgetKey] = useState("");
   const [familyOnly, setFamilyOnly] = useState(false);
+  const [isDestinationMenuOpen, setIsDestinationMenuOpen] = useState(false);
 
   const loadPackages = async () => {
     setLoading(true);
@@ -57,10 +88,10 @@ const Packages = () => {
 
     try {
       const response = await fetchPackages();
-      setPackages(Array.isArray(response.data) ? response.data : []);
-    } catch (err) {
-      setPackages([]);
-      setError(err.message || "Failed to load packages. Please try again.");
+      const live = Array.isArray(response.data) ? response.data : [];
+      setPackages(live.length > 0 ? live : localPackages);
+    } catch {
+      setPackages(localPackages);
     } finally {
       setLoading(false);
     }
@@ -75,7 +106,7 @@ const Packages = () => {
       if (!detail) {
         setSearchQuery("");
         setActiveType("All");
-        setActiveCategory("All");
+        setActiveSeason("all");
         setDurationKey("");
         setBudgetKey("");
         setFamilyOnly(false);
@@ -83,7 +114,7 @@ const Packages = () => {
       }
 
       setSearchQuery(detail.destination || "");
-      setActiveCategory("All");
+      setActiveSeason("all");
       setActiveType(detail.type && detail.type !== "All" ? detail.type : "All");
       setFamilyOnly(detail.category === "family");
       setDurationKey(detail.duration || "");
@@ -106,14 +137,46 @@ const Packages = () => {
     return () => window.removeEventListener("view-tour-details", handleViewTourDetails);
   }, []);
 
-  const categories = ["All", "September - December 2026", "New Year Tour", "January - March 2027"];
+  const seasons = [
+    { id: "all", label: "All Seasons" },
+    { id: "jan-may", label: "Jan - May" },
+    { id: "jun-sep", label: "June - Sep" },
+    { id: "oct-dec", label: "Oct - Dec" },
+  ];
   const types = ["All", "Domestic", "International", "Pilgrimage"];
+  const destinationOptions = useMemo(() => {
+    const destinations = new Map();
+
+    packages.forEach((pkg) => {
+      [pkg.destination, pkg.title]
+        .filter(Boolean)
+        .flatMap((value) => [value, ...value.split(/[,&/]+/)])
+        .map((value) => value.replace(/\s+Tour$/i, "").trim())
+        .filter((value) => value.length > 1)
+        .forEach((value) => {
+          const key = value.toLocaleLowerCase();
+          if (!destinations.has(key)) destinations.set(key, value);
+        });
+    });
+
+    return [...destinations.values()].sort((a, b) => a.localeCompare(b));
+  }, [packages]);
+  const matchingDestinationOptions = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase();
+    return destinationOptions.filter((destination) => !query || destination.toLocaleLowerCase().includes(query));
+  }, [destinationOptions, searchQuery]);
 
   const filteredAndSortedPackages = useMemo(() => {
     let result = [...packages];
 
-    if (activeCategory !== "All") {
-      result = result.filter((pkg) => pkg.category === activeCategory);
+    if (activeSeason !== "all") {
+      result = result.filter((pkg) => {
+        const month = getDepartureMonth(pkg.date);
+        if (!month) return false;
+        if (activeSeason === "jan-may") return month >= 1 && month <= 5;
+        if (activeSeason === "jun-sep") return month >= 6 && month <= 9;
+        return month >= 10 && month <= 12;
+      });
     }
 
     if (familyOnly) {
@@ -149,43 +212,83 @@ const Packages = () => {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === "alphabetical") {
       result.sort((a, b) => a.title.localeCompare(b.title));
+    } else {
+      result.sort(comparePackages);
     }
 
     return result;
-  }, [packages, activeCategory, activeType, searchQuery, sortBy, durationKey, budgetKey, familyOnly]);
+  }, [packages, activeSeason, activeType, searchQuery, sortBy, durationKey, budgetKey, familyOnly]);
 
   useEffect(() => {
     setVisibleCount(6);
-  }, [activeCategory, activeType, searchQuery, sortBy, durationKey, budgetKey, familyOnly]);
+  }, [activeSeason, activeType, searchQuery, sortBy, durationKey, budgetKey, familyOnly]);
 
   return (
-    <section id="packages" className="scroll-mt-24 py-20 bg-[#FFF8E7]/50 relative overflow-hidden">
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl -z-10" />
+    <section id="packages" className="scroll-mt-24 py-20 bg-white relative overflow-hidden">
+      <div className="absolute top-1/4 left-0 w-96 h-96 bg-brand/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-sky/15 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle
-          title="Tours of 2026-27"
-          subtitle="Explore our comprehensive 1-year tour packages. Plan your dream vacation with complete peace of mind."
+          eyebrow={lang === "mr" ? "टूर पॅकेजेस" : "Tour packages"}
+          title={lang === "mr" ? "येणाऱ्या ग्रुप डेपार्चर्स" : "Upcoming group departures"}
+          subtitle={
+            lang === "mr"
+              ? "येत्या हंगामातील ठरलेल्या तारखांच्या सहली. कालावधी किंवा प्रकार निवडा आणि पॅकेज उघडा."
+              : "Fixed-date tours for the coming season. Filter by period or type, then open a package to see what is included."
+          }
         />
 
-        <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 mb-12 space-y-6">
+        <div className="bg-white rounded-3xl p-6 shadow-xl border border-line mb-12 space-y-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="relative w-full md:max-w-md">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-lg">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted text-lg">
                 🔍
               </span>
               <input
                 type="text"
-                placeholder="Search packages, destinations (e.g. Dubai)..."
+                placeholder="Search packages, destinations (e.g. Dubai, Thailand,Kerala)..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-[#F8FAFC] focus:outline-none focus:ring-2 focus:ring-[#F97316]/30 focus:border-[#F97316] transition-all text-sm"
+                onFocus={() => setIsDestinationMenuOpen(true)}
+                onBlur={() => window.setTimeout(() => setIsDestinationMenuOpen(false), 120)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsDestinationMenuOpen(true);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setIsDestinationMenuOpen(false);
+                }}
+                aria-autocomplete="list"
+                aria-expanded={isDestinationMenuOpen && matchingDestinationOptions.length > 0}
+                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-line bg-white text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all text-sm"
               />
+              {isDestinationMenuOpen && matchingDestinationOptions.length > 0 && (
+                <ul
+                  role="listbox"
+                  className="absolute left-0 right-0 top-full z-30 mt-2 max-h-60 overflow-y-auto rounded-xl border border-line bg-white py-1 text-ink shadow-xl"
+                >
+                  {matchingDestinationOptions.map((destination) => (
+                    <li key={destination} role="option" aria-selected={searchQuery === destination}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setSearchQuery(destination);
+                          setIsDestinationMenuOpen(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm transition hover:bg-cream focus:bg-cream focus:outline-none"
+                      >
+                        {destination}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
               {searchQuery && (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-ink cursor-pointer"
                 >
                   ✕
                 </button>
@@ -193,14 +296,14 @@ const Packages = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-stretch sm:items-center">
-              <div className="flex items-center gap-2 bg-[#F8FAFC] border border-slate-200 rounded-2xl px-4 py-2">
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sort:</span>
+              <div className="flex items-center gap-2 bg-cream border border-line rounded-2xl px-4 py-2">
+                <span className="text-xs font-semibold text-muted uppercase tracking-wider">Sort:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-transparent border-none text-sm font-semibold text-slate-700 focus:outline-none cursor-pointer"
+                  className="bg-transparent border-none text-sm font-semibold text-ink focus:outline-none cursor-pointer"
                 >
-                  <option value="default">Flyer Order (Date)</option>
+                  <option value="default">Featured order</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
                   <option value="alphabetical">A to Z Alphabetical</option>
@@ -209,35 +312,35 @@ const Packages = () => {
             </div>
           </div>
 
-          <hr className="border-slate-100" />
+          <hr className="border-line" />
 
           <div className="space-y-4">
             <div>
-              <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+              <span className="block text-xs font-bold text-muted uppercase tracking-wider mb-2.5">
                 Filter by Season / Period
               </span>
               <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
+                {seasons.map((season) => (
                   <button
-                    key={cat}
+                    key={season.id}
                     onClick={() => {
-                      setActiveCategory(cat);
+                      setActiveSeason(season.id);
                       setFamilyOnly(false);
                     }}
                     className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
-                      activeCategory === cat
-                        ? "bg-[#F97316] text-white shadow-md shadow-[#F97316]/20 border border-[#F97316]"
-                        : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/60"
+                      activeSeason === season.id
+                        ? "bg-brand text-white shadow-md shadow-brand/25 border border-brand"
+                        : "bg-cream hover:bg-sand text-muted border border-line"
                     }`}
                   >
-                    {cat === "All" ? "All Seasons" : cat}
+                    {season.label}
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+              <span className="block text-xs font-bold text-muted uppercase tracking-wider mb-2.5">
                 Filter by Tour Type
               </span>
               <div className="flex flex-wrap gap-2">
@@ -250,8 +353,8 @@ const Packages = () => {
                     }}
                     className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                       activeType === t
-                        ? "bg-[#0369A1] text-white shadow-md shadow-[#0369A1]/20 border border-[#0369A1]"
-                        : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/60"
+                        ? "bg-sky-dark text-white shadow-md shadow-sky/25 border border-sky-dark"
+                        : "bg-cream hover:bg-sand text-muted border border-line"
                     }`}
                   >
                     {t === "All" ? "All Types" : t}
@@ -263,19 +366,19 @@ const Packages = () => {
         </div>
 
         {loading ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 shadow-md">
-            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-[#0369A1]" />
-            <h3 className="text-xl font-bold text-slate-800 mb-2">Loading tour packages...</h3>
-            <p className="text-slate-500">Please wait while we fetch the latest packages.</p>
+          <div className="bg-white rounded-3xl p-12 text-center border border-line shadow-md">
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-line border-t-brand" />
+            <h3 className="text-xl font-bold text-ink mb-2">Loading tour packages...</h3>
+            <p className="text-muted">Please wait while we fetch the latest packages.</p>
           </div>
         ) : error ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-red-100 shadow-md">
+          <div className="bg-white rounded-3xl p-12 text-center border border-brand/20 shadow-md">
             <span className="text-5xl block mb-4">⚠️</span>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">Unable to load packages</h3>
-            <p className="text-slate-500 max-w-md mx-auto mb-6">{error}</p>
+            <h3 className="text-xl font-bold text-ink mb-2">Unable to load packages</h3>
+            <p className="text-muted max-w-md mx-auto mb-6">{error}</p>
             <button
               onClick={loadPackages}
-              className="bg-[#0369A1] hover:bg-[#025a8b] text-white font-bold px-8 py-3.5 rounded-full shadow-lg cursor-pointer"
+              className="bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3.5 rounded-full shadow-lg cursor-pointer"
             >
               Try Again
             </button>
@@ -283,8 +386,8 @@ const Packages = () => {
         ) : (
           <>
             <div className="flex justify-between items-center mb-6">
-              <p className="text-slate-500 text-sm">
-                Showing <span className="font-bold text-[#0F172A]">{Math.min(filteredAndSortedPackages.length, visibleCount)}</span> of <span className="font-bold text-[#0F172A]">{filteredAndSortedPackages.length}</span> tour packages
+              <p className="text-muted text-sm">
+                Showing <span className="font-bold text-ink">{Math.min(filteredAndSortedPackages.length, visibleCount)}</span> of <span className="font-bold text-ink">{filteredAndSortedPackages.length}</span> tour packages
               </p>
             </div>
 
@@ -304,7 +407,7 @@ const Packages = () => {
                   <div className="mt-12 text-center">
                     <button
                       onClick={() => setVisibleCount((prev) => prev + 6)}
-                      className="bg-[#0369A1] hover:bg-[#025a8b] text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-sky-700/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                      className="bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-brand/25 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                     >
                       Load More Packages
                     </button>
@@ -312,23 +415,23 @@ const Packages = () => {
                 )}
               </>
             ) : packages.length === 0 ? (
-              <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 shadow-md">
+              <div className="bg-white rounded-3xl p-12 text-center border border-line shadow-md">
                 <span className="text-5xl block mb-4">🧳</span>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">No packages available yet</h3>
-                <p className="text-slate-500 max-w-md mx-auto">
+                <h3 className="text-xl font-bold text-ink mb-2">No packages available yet</h3>
+                <p className="text-muted max-w-md mx-auto">
                   Tour packages will appear here once they are added. Please check back soon.
                 </p>
               </div>
             ) : (
-              <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 shadow-md">
+              <div className="bg-white rounded-3xl p-12 text-center border border-line shadow-md">
                 <span className="text-5xl block mb-4">🔍</span>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">No tour packages found</h3>
-                <p className="text-slate-500 max-w-md mx-auto">
+                <h3 className="text-xl font-bold text-ink mb-2">No tour packages found</h3>
+                <p className="text-muted max-w-md mx-auto">
                   We couldn't find any packages matching your filter criteria. Try adjusting your search query or selecting a different season.
                 </p>
                 <button
                   onClick={() => {
-                    setActiveCategory("All");
+                    setActiveSeason("all");
                     setActiveType("All");
                     setSearchQuery("");
                     setSortBy("default");
@@ -337,7 +440,7 @@ const Packages = () => {
                     setFamilyOnly(false);
                     window.__heroSearch = null;
                   }}
-                  className="mt-6 text-[#F97316] font-bold hover:underline cursor-pointer"
+                  className="mt-6 text-brand font-bold hover:underline cursor-pointer"
                 >
                   Reset all filters
                 </button>

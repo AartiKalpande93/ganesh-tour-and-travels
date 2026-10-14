@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { contactInfo } from "../data/siteData";
 import { scrollToSection } from "../utils/scrollTo";
+import { getEmiDetails } from "../utils/emi";
 
 const defaultTourData = {
   "Andaman Tour": {
@@ -136,6 +137,56 @@ const defaultTourData = {
       "Torch light & personal medical kit",
       "Cash (ATMs are limited in higher altitudes)"
     ]
+  },
+  "Europe Delight Tour": {
+    duration: "12 Days / 11 Nights",
+    destinations: [
+      "Zurich",
+      "Grindelwald",
+      "Interlaken",
+      "Mount Titlis",
+      "Lucerne",
+      "Rhine Falls",
+      "Black Forest",
+      "Frankfurt",
+      "Cologne",
+      "Amsterdam",
+      "Brussels",
+      "Paris",
+      "Disneyland Paris"
+    ],
+    highlights: [
+      "Discover Zurich and the Swiss village of Grindelwald",
+      "Optional Jungfraujoch excursion from Grindelwald",
+      "Experience Mount Titlis and explore Lucerne",
+      "Visit Rhine Falls and travel through Germany's Black Forest",
+      "See Cologne Cathedral, Amsterdam canals and Brussels' Grand Place",
+      "Explore Paris landmarks, with a Disneyland Paris or leisure-day option"
+    ],
+    itinerary: [
+      { day: "Day 1", title: "Arrive in Zurich", desc: "Arrive in Zurich, transfer to the hotel and settle in. Enjoy the evening at leisure and an Indian dinner. Overnight stay in Zurich." },
+      { day: "Day 2", title: "Grindelwald and Interlaken", desc: "Travel to Grindelwald and enjoy its Alpine scenery. An optional excursion to Jungfraujoch may be available. Continue to Interlaken for a walk before returning to Zurich." },
+      { day: "Day 3", title: "Mount Titlis and Lucerne", desc: "Visit Mount Titlis for mountain views and the Rotair cable-car experience, subject to operating conditions. Later explore Lucerne's old town and Lion Monument. Overnight in Zurich." },
+      { day: "Day 4", title: "Rhine Falls and Black Forest", desc: "See Rhine Falls at Schaffhausen, then continue through the scenic Black Forest region toward Frankfurt. Overnight in Frankfurt." },
+      { day: "Day 5", title: "Frankfurt to Cologne and Amsterdam", desc: "Travel to Cologne and visit the cathedral area. Continue to Amsterdam and check in for the night." },
+      { day: "Day 6", title: "Amsterdam, Windmills and Canals", desc: "Explore Amsterdam's canals and city highlights. Depending on the season and final schedule, visit a tulip garden or the windmills and workshops at Zaanse Schans. Overnight in Amsterdam." },
+      { day: "Day 7", title: "Amsterdam to Brussels and Paris", desc: "Travel to Brussels to see Grand Place and the Atomium area. Continue to Paris for an overnight stay." },
+      { day: "Day 8", title: "Paris City Tour", desc: "Discover Paris landmarks including the Eiffel Tower area, Champs-Élysées and Arc de Triomphe. Enjoy a Seine River cruise if included in the confirmed itinerary." },
+      { day: "Day 9", title: "Disneyland Paris or Leisure Day", desc: "Choose a day at Disneyland Paris or spend the day exploring Paris at your own pace. Overnight in Paris." },
+      { day: "Day 10", title: "Paris at Leisure", desc: "Enjoy time for museums, local neighbourhoods or shopping. Optional activities depend on the final tour plan. Overnight in Paris." },
+      { day: "Day 11", title: "Paris and Farewell Evening", desc: "Spend a relaxed day revisiting favourite sights or shopping for souvenirs. Prepare for departure and stay overnight in Paris." },
+      { day: "Day 12", title: "Departure from Paris", desc: "After breakfast, check out and transfer to the Paris airport for your onward journey." }
+    ],
+    accommodation: "11 nights of hotel accommodation across the itinerary; hotel names and room arrangements are confirmed before booking.",
+    transport: "Intercity transfers and sightseeing transport as specified in the confirmed itinerary.",
+    mealPlan: "Meals as specified in the confirmed all-inclusive tour plan; dietary preferences should be shared in advance.",
+    thingsToCarry: [
+      "Valid passport and required travel documents",
+      "Weather-appropriate layers and comfortable walking shoes",
+      "Travel adapter suitable for European sockets",
+      "Personal medicines and basic travel essentials",
+      "Travel insurance documents, if arranged separately"
+    ]
   }
 };
 
@@ -215,12 +266,13 @@ const TourDetailsModal = ({ tour, onClose }) => {
   };
 
   const formattedPrice = typeof tour.price === 'number' ? `₹${tour.price.toLocaleString('en-IN')}/-` : tour.price;
+  const emiDetails = getEmiDetails(tour.price);
 
   const faqs = [
     { q: "Is vegetarian food available during the tour?", a: "Yes! We make special arrangements for pure vegetarian and regional meals throughout the trip. Special dietary requirements can be requested in advance." },
     { q: "What type of accommodation is provided?", a: "We provide well-maintained, clean, 3-Star Deluxe hotels and resorts with modern amenities, attached bathrooms, and AC facilities." },
     { q: "Are train or flight tickets included in the price?", a: tour.note ? tour.note : "Price is for the land package. Flight/Train tickets can be arranged upon request at actual charges." },
-    { q: "How can I book this tour package?", a: "You can click the 'Book Now' button at the bottom of this page to submit an inquiry, call us directly at +91 70582 55525, or message us on WhatsApp!" },
+    { q: "How can I book this tour package?", a: "You can click the 'Book Now' button at the bottom of this page to submit an inquiry, call us directly at +91 97638 76734 or +91 70582 55525, or message us on WhatsApp!" },
     { q: "What is the cancellation & refund policy?", a: "Cancellations made 30+ days prior to departure receive a 90% refund. 15-30 days prior receives 50% refund. Cancellations under 15 days are non-refundable but transferable to future dates based on terms." }
   ];
 
@@ -234,13 +286,13 @@ const TourDetailsModal = ({ tour, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fade-in">
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-ink/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fade-in">
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden border border-line">
         
         {/* Top Header Bar */}
-        <div className="sticky top-0 z-30 bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shadow-md">
+        <div className="sticky top-0 z-30 bg-ink text-white px-6 py-4 flex items-center justify-between border-b border-white/10 shadow-md">
           <div className="flex items-center gap-3">
-            <span className="bg-[#F97316] text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+            <span className="bg-brand text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
               {tour.type || "Tour Package"}
             </span>
             <h2 className="text-lg sm:text-xl font-bold truncate max-w-md">{tour.title}</h2>
@@ -255,7 +307,7 @@ const TourDetailsModal = ({ tour, onClose }) => {
         </div>
 
         {/* Scrollable Main Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-10 text-slate-800">
+        <div className="flex-1 overflow-y-auto p-6 space-y-10 text-ink">
 
           {/* Hero Banner Section */}
           <div className="relative rounded-2xl overflow-hidden h-72 sm:h-96 shadow-lg group">
@@ -264,54 +316,68 @@ const TourDetailsModal = ({ tour, onClose }) => {
               alt={tour.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent" />
             
             <div className="absolute bottom-6 left-6 right-6 text-white">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
-                  📅 {tour.date} ({tour.year || 2026})
+                  📅 {tour.date}{tour.year ? ` (${tour.year})` : ""}
                 </span>
-                <span className="bg-emerald-500/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">
+                <span className="bg-palm/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">
                   ⏱️ {customInfo.duration}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold mb-2 drop-shadow-md">{tour.title}</h1>
-              <p className="text-slate-200 text-sm sm:text-base max-w-2xl leading-relaxed">
+              <p className="text-white/85 text-sm sm:text-base max-w-2xl leading-relaxed">
                 {tour.description}
               </p>
             </div>
 
-            <div className="absolute top-4 right-4 bg-red-600 text-white px-5 py-2 rounded-2xl font-black text-xl shadow-xl">
+            <div className="absolute top-4 right-4 bg-brand text-white px-5 py-2 rounded-2xl font-black text-xl shadow-xl">
               {formattedPrice}
             </div>
           </div>
 
           {/* Quick Info Grid Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-orange-50 border border-orange-100 p-4 rounded-2xl text-center">
+            <div className="bg-sunset-soft border border-sunset/25 p-4 rounded-2xl text-center">
               <span className="text-2xl block mb-1">⏱️</span>
-              <span className="text-xs text-orange-600 font-bold uppercase block">Duration</span>
-              <span className="text-sm font-extrabold text-slate-800">{customInfo.duration}</span>
+              <span className="text-xs text-sunset font-bold uppercase block">Duration</span>
+              <span className="text-sm font-extrabold text-ink">{customInfo.duration}</span>
             </div>
-            <div className="bg-sky-50 border border-sky-100 p-4 rounded-2xl text-center">
+            <div className="bg-sky-soft border border-sky/25 p-4 rounded-2xl text-center">
               <span className="text-2xl block mb-1">🗓️</span>
-              <span className="text-xs text-sky-600 font-bold uppercase block">Travel Dates</span>
-              <span className="text-sm font-extrabold text-slate-800">{tour.date}</span>
+              <span className="text-xs text-sky-dark font-bold uppercase block">Travel Dates</span>
+              <span className="text-sm font-extrabold text-ink">{tour.date}</span>
             </div>
-            <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl text-center">
+            <div className="bg-brand-soft border border-brand/20 p-4 rounded-2xl text-center">
               <span className="text-2xl block mb-1">💰</span>
-              <span className="text-xs text-emerald-600 font-bold uppercase block">Tour Price</span>
-              <span className="text-sm font-extrabold text-slate-800">{formattedPrice}</span>
+              <span className="text-xs text-brand font-bold uppercase block">Tour Price</span>
+              <span className="text-sm font-extrabold text-ink">{formattedPrice}</span>
             </div>
-            <div className="bg-purple-50 border border-purple-100 p-4 rounded-2xl text-center">
+            <div className="bg-palm-soft border border-palm/25 p-4 rounded-2xl text-center">
               <span className="text-2xl block mb-1">🏨</span>
-              <span className="text-xs text-purple-600 font-bold uppercase block">Stay Category</span>
-              <span className="text-sm font-extrabold text-slate-800">3-Star Deluxe</span>
+              <span className="text-xs text-palm font-bold uppercase block">Stay Category</span>
+              <span className="text-sm font-extrabold text-ink">3-Star Deluxe</span>
             </div>
           </div>
 
+          {emiDetails && (
+            <div className="flex flex-col gap-1 rounded-2xl border border-brand/20 bg-brand-soft px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-extrabold text-ink">Flexible EMI option</p>
+                <p className="mt-1 text-xs text-muted">
+                  Approx. {emiDetails.formattedMonthlyAmount} × {emiDetails.installments} installments
+                </p>
+              </div>
+              <p className="text-xs font-medium text-brand">
+                Installment plan is subject to confirmation.
+              </p>
+            </div>
+          )}
+
           {/* Nav Tabs */}
-          <div className="flex border-b border-slate-200 overflow-x-auto gap-2 scrollbar-none pb-1">
+          <div className="flex border-b border-line overflow-x-auto gap-2 scrollbar-none pb-1">
             {[
               { id: "overview", label: "Overview & Highlights" },
               { id: "itinerary", label: "Day-wise Itinerary" },
@@ -325,8 +391,8 @@ const TourDetailsModal = ({ tour, onClose }) => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-[#0369A1] text-white shadow-md"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-brand text-white shadow-md"
+                    : "bg-cream text-muted hover:bg-sand"
                 }`}
               >
                 {tab.label}
@@ -338,28 +404,28 @@ const TourDetailsModal = ({ tour, onClose }) => {
           {(activeTab === "overview" || activeTab === "all") && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">🌟</span> Tour Overview & Highlights
+                <h3 className="text-xl font-bold text-ink mb-3 flex items-center gap-2">
+                  <span className="text-sunset">🌟</span> Tour Overview & Highlights
                 </h3>
-                <p className="text-slate-600 leading-relaxed mb-4">
+                <p className="text-muted leading-relaxed mb-4">
                   {tour.description} This meticulously planned package brings you the finest travel experience with expert tour management, comfortable stay, delicious meals, and seamless sightseeing.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {customInfo.highlights.map((highlight, idx) => (
-                    <div key={idx} className="flex items-start gap-3 bg-orange-50/60 border border-orange-100 p-3.5 rounded-2xl">
-                      <span className="text-orange-500 font-bold">✓</span>
-                      <span className="text-sm font-semibold text-slate-800">{highlight}</span>
+                    <div key={idx} className="flex items-start gap-3 bg-sunset-soft border border-sunset/20 p-3.5 rounded-2xl">
+                      <span className="text-sunset font-bold">✓</span>
+                      <span className="text-sm font-semibold text-ink">{highlight}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Destinations Covered */}
-              <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">📍 Destinations Covered</h4>
+              <div className="bg-cream border border-line p-5 rounded-2xl">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">📍 Destinations Covered</h4>
                 <div className="flex flex-wrap gap-2">
                   {customInfo.destinations.map((dest, idx) => (
-                    <span key={idx} className="bg-white border border-slate-300 text-slate-800 font-semibold text-xs px-3 py-1.5 rounded-full shadow-sm">
+                    <span key={idx} className="bg-white border border-line text-ink font-semibold text-xs px-3 py-1.5 rounded-full shadow-sm">
                       {dest}
                     </span>
                   ))}
@@ -371,21 +437,21 @@ const TourDetailsModal = ({ tour, onClose }) => {
           {/* Section 2: Complete Day-Wise Itinerary */}
           {(activeTab === "itinerary" || activeTab === "all") && (
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <span className="text-sky-600">🗺️</span> Complete Day-Wise Itinerary
+              <h3 className="text-xl font-bold text-ink mb-6 flex items-center gap-2">
+                <span className="text-sky">🗺️</span> Complete Day-Wise Itinerary
               </h3>
-              <div className="space-y-4 relative before:absolute before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-sky-200">
+              <div className="space-y-4 relative before:absolute before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-sky/30">
                 {customInfo.itinerary.map((item, idx) => (
                   <div key={idx} className="relative pl-10">
-                    <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-[#0369A1] text-white flex items-center justify-center font-extrabold text-xs shadow-md">
+                    <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-sky-dark text-white flex items-center justify-center font-extrabold text-xs shadow-md">
                       {idx + 1}
                     </div>
-                    <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                      <span className="text-xs font-extrabold text-[#F97316] uppercase tracking-wider block mb-1">
+                    <div className="bg-white border border-line p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                      <span className="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">
                         {item.day}
                       </span>
-                      <h4 className="text-base font-bold text-slate-900 mb-2">{item.title}</h4>
-                      <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                      <h4 className="text-base font-bold text-ink mb-2">{item.title}</h4>
+                      <p className="text-sm text-muted leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -396,19 +462,19 @@ const TourDetailsModal = ({ tour, onClose }) => {
           {/* Section 3: Inclusions & Exclusions */}
           {(activeTab === "inclusions" || activeTab === "all") && (
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <span className="text-emerald-600">📋</span> Inclusions & Exclusions
+              <h3 className="text-xl font-bold text-ink mb-6 flex items-center gap-2">
+                <span className="text-palm">📋</span> Inclusions & Exclusions
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Inclusions */}
-                <div className="bg-emerald-50/70 border border-emerald-200 p-5 rounded-2xl">
-                  <h4 className="text-emerald-800 font-bold text-base mb-4 flex items-center gap-2">
+                <div className="bg-palm-soft border border-palm/25 p-5 rounded-2xl">
+                  <h4 className="text-palm font-bold text-base mb-4 flex items-center gap-2">
                     <span>✅</span> Package Inclusions
                   </h4>
                   <ul className="space-y-2.5">
                     {customInfo.inclusions.map((inc, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
-                        <span className="text-emerald-600 font-bold mt-0.5">✓</span>
+                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted font-medium">
+                        <span className="text-palm font-bold mt-0.5">✓</span>
                         <span>{inc}</span>
                       </li>
                     ))}
@@ -416,14 +482,14 @@ const TourDetailsModal = ({ tour, onClose }) => {
                 </div>
 
                 {/* Exclusions */}
-                <div className="bg-rose-50/70 border border-rose-200 p-5 rounded-2xl">
-                  <h4 className="text-rose-800 font-bold text-base mb-4 flex items-center gap-2">
+                <div className="bg-brand-soft border border-brand/20 p-5 rounded-2xl">
+                  <h4 className="text-brand font-bold text-base mb-4 flex items-center gap-2">
                     <span>❌</span> Package Exclusions
                   </h4>
                   <ul className="space-y-2.5">
                     {customInfo.exclusions.map((exc, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
-                        <span className="text-rose-500 font-bold mt-0.5">✕</span>
+                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted font-medium">
+                        <span className="text-brand font-bold mt-0.5">✕</span>
                         <span>{exc}</span>
                       </li>
                     ))}
@@ -436,25 +502,25 @@ const TourDetailsModal = ({ tour, onClose }) => {
           {/* Section 4: Stay & Transport Details */}
           {(activeTab === "details" || activeTab === "all") && (
             <div className="space-y-6">
-              <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <span className="text-purple-600">🏨</span> Accommodation, Transport & Meals
+              <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+                <span className="text-gold-deep">🏨</span> Accommodation, Transport & Meals
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                <div className="bg-white border border-line p-5 rounded-2xl shadow-sm">
                   <span className="text-3xl block mb-2">🏨</span>
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Accommodation Details</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{customInfo.accommodation}</p>
+                  <h4 className="font-bold text-ink text-sm mb-1">Accommodation Details</h4>
+                  <p className="text-xs text-muted leading-relaxed">{customInfo.accommodation}</p>
                 </div>
-                <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                <div className="bg-white border border-line p-5 rounded-2xl shadow-sm">
                   <span className="text-3xl block mb-2">🚘</span>
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Transportation Details</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{customInfo.transport}</p>
+                  <h4 className="font-bold text-ink text-sm mb-1">Transportation Details</h4>
+                  <p className="text-xs text-muted leading-relaxed">{customInfo.transport}</p>
                 </div>
-                <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                <div className="bg-white border border-line p-5 rounded-2xl shadow-sm">
                   <span className="text-3xl block mb-2">🍽️</span>
-                  <h4 className="font-bold text-slate-900 text-sm mb-1">Meal Plan</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{customInfo.mealPlan}</p>
+                  <h4 className="font-bold text-ink text-sm mb-1">Meal Plan</h4>
+                  <p className="text-xs text-muted leading-relaxed">{customInfo.mealPlan}</p>
                 </div>
               </div>
             </div>
@@ -463,13 +529,13 @@ const TourDetailsModal = ({ tour, onClose }) => {
           {/* Section 5: Things to Carry */}
           {(activeTab === "carry" || activeTab === "all") && (
             <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <span className="text-amber-600">🎒</span> Things to Carry (Packing Checklist)
+              <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+                <span className="text-gold-deep">🎒</span> Things to Carry (Packing Checklist)
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {customInfo.thingsToCarry.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-3 bg-amber-50/50 border border-amber-100 p-3.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-800">
-                    <span className="text-amber-600 font-bold">📌</span>
+                  <div key={idx} className="flex items-center gap-3 bg-sunset-soft border border-gold/30 p-3.5 rounded-xl text-xs sm:text-sm font-semibold text-ink">
+                    <span className="text-gold-deep font-bold">📌</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -482,21 +548,21 @@ const TourDetailsModal = ({ tour, onClose }) => {
             <div className="space-y-8">
               {/* FAQs */}
               <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <span className="text-blue-600">❓</span> Frequently Asked Questions (FAQs)
+                <h3 className="text-xl font-bold text-ink mb-4 flex items-center gap-2">
+                  <span className="text-sky">❓</span> Frequently Asked Questions (FAQs)
                 </h3>
                 <div className="space-y-3">
                   {faqs.map((faq, idx) => (
-                    <div key={idx} className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+                    <div key={idx} className="border border-line rounded-2xl overflow-hidden bg-white">
                       <button
                         onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                        className="w-full text-left px-5 py-3.5 flex items-center justify-between font-bold text-xs sm:text-sm text-slate-800 hover:bg-slate-50 cursor-pointer"
+                        className="w-full text-left px-5 py-3.5 flex items-center justify-between font-bold text-xs sm:text-sm text-ink hover:bg-cream cursor-pointer"
                       >
                         <span>{faq.q}</span>
-                        <span className="text-slate-400 text-lg">{openFaq === idx ? "−" : "+"}</span>
+                        <span className="text-brand text-lg">{openFaq === idx ? "−" : "+"}</span>
                       </button>
                       {openFaq === idx && (
-                        <div className="px-5 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                        <div className="px-5 pb-4 text-xs sm:text-sm text-muted leading-relaxed border-t border-line pt-3">
                           {faq.a}
                         </div>
                       )}
@@ -506,9 +572,9 @@ const TourDetailsModal = ({ tour, onClose }) => {
               </div>
 
               {/* Cancellation Policy */}
-              <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
-                <h4 className="font-bold text-slate-900 text-sm mb-2">📜 Terms & Cancellation Policy</h4>
-                <p className="text-xs text-slate-600 leading-relaxed">
+              <div className="bg-cream border border-line p-5 rounded-2xl">
+                <h4 className="font-bold text-ink text-sm mb-2">📜 Terms & Cancellation Policy</h4>
+                <p className="text-xs text-muted leading-relaxed">
                   30+ days prior to departure: 90% refund. 15-30 days prior: 50% refund. Less than 15 days: Non-refundable but transferable to future dates. Valid government photo ID is mandatory for all travelers.
                 </p>
               </div>
@@ -516,11 +582,11 @@ const TourDetailsModal = ({ tour, onClose }) => {
           )}
 
           {/* Contact Information for Inquiries */}
-          <div className="bg-gradient-to-r from-slate-900 to-[#0369A1] text-white p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="bg-gradient-to-r from-brand-dark to-brand text-white p-6 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
               <h4 className="text-lg font-extrabold mb-1">Have Questions About This Tour?</h4>
-              <p className="text-xs text-slate-200">Our travel experts are ready to assist you round the clock.</p>
-              <div className="flex flex-wrap items-center gap-4 mt-3 text-xs font-semibold text-amber-300">
+              <p className="text-xs text-white/80">Our travel experts are ready to assist you round the clock.</p>
+              <div className="flex flex-wrap items-center gap-4 mt-3 text-xs font-semibold text-gold">
                 <span>📞 {contactInfo.phones[0]}</span>
                 <span>✉️ {contactInfo.email}</span>
               </div>
@@ -529,24 +595,24 @@ const TourDetailsModal = ({ tour, onClose }) => {
               href={`https://wa.me/${contactInfo.whatsapp}?text=Hi,%20I%20am%20interested%20in%20the%20${encodeURIComponent(tour.title)}%20(${encodeURIComponent(tour.date)})`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg shrink-0 transition-transform hover:scale-105"
+              className="px-5 py-2.5 rounded-full bg-palm hover:bg-palm-dark text-white font-bold text-xs flex items-center gap-2 shadow-lg shrink-0 transition-transform hover:scale-105"
             >
               💬 WhatsApp Inquiry
             </a>
           </div>
 
           {/* PROMINENT BOOK NOW BUTTON AT THE BOTTOM AFTER ALL DETAILS */}
-          <div className="pt-6 border-t border-slate-200 text-center space-y-3">
-            <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+          <div className="pt-6 border-t border-line text-center space-y-3">
+            <p className="text-xs text-muted font-semibold uppercase tracking-wider">
               Ready for an unforgettable adventure?
             </p>
             <button
               onClick={handleBookNowClick}
-              className="w-full sm:w-auto min-w-[280px] bg-gradient-to-r from-[#F97316] via-orange-500 to-[#F97316] text-white font-extrabold text-lg px-10 py-4 rounded-full shadow-2xl shadow-orange-500/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              className="w-full sm:w-auto min-w-[280px] bg-brand hover:bg-brand-dark text-white font-extrabold text-lg px-10 py-4 rounded-full shadow-2xl shadow-brand/35 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
               Book Now 🚀
             </button>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted">
               * Click to proceed with your booking & reserve your seats
             </p>
           </div>

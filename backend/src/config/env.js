@@ -24,11 +24,11 @@ export const isPlaceholderValue = (value = "") => {
 };
 
 export const env = {
-  port: Number(process.env.PORT) || 5000,
+  port: Number(process.env.PORT) || 5002,
   nodeEnv: process.env.NODE_ENV || "development",
   mongodbUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ganeshtour",
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
-  contactToEmail: process.env.CONTACT_TO_EMAIL || "aartikalpande93@gmail.com",
+  contactToEmail: process.env.CONTACT_TO_EMAIL || "travelganeshyaatra@gmail.com",
   smtp: {
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: Number(process.env.SMTP_PORT) || 587,

@@ -1,11 +1,23 @@
-const ServiceCard = ({ icon, title, description }) => (
-  <div className="group bg-white rounded-[16px] p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-[#E2E8F0]/60">
-    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 text-[#15803D]">
-      {icon}
-    </div>
-    <h3 className="text-xl font-bold text-[#1F2937] mb-2">{title}</h3>
-    <p className="text-[#475569] leading-relaxed">{description}</p>
-  </div>
+import { Icon } from "./Icons";
+
+const ServiceCard = ({ icon, title, description, actionLabel, onAction }) => (
+  <article className="flex h-full flex-col rounded-2xl border border-line bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-6">
+    <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-brand-ink">
+      <Icon name={icon} className="h-6 w-6" />
+    </span>
+    <h3 className="text-lg font-bold leading-snug text-ink">{title}</h3>
+    <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{description}</p>
+    {onAction && (
+      <button
+        type="button"
+        onClick={onAction}
+        className="mt-4 inline-flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-brand-ink transition hover:text-brand-ink cursor-pointer"
+      >
+        {actionLabel}
+        <Icon name="arrow" className="h-4 w-4" />
+      </button>
+    )}
+  </article>
 );
 
 export default ServiceCard;

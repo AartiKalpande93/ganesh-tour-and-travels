@@ -1,48 +1,69 @@
-import { navLinks, services, contactInfo } from "../data/siteData";
-import { scrollToSection } from "../utils/scrollTo";
+import { navLinks, services, contactInfo, FACEBOOK_URL, text, INSTAGRAM_URL } from "../data/siteData";
 import { useLanguage } from "../context/LanguageContext";
+import { Icon } from "./Icons";
+import logo from "../assets/logo.png";
 
 const Footer = ({ setActiveTab }) => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+
   const handleClick = (id) => {
-    if (setActiveTab) {
-      setActiveTab(id);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      scrollToSection(id);
-    }
+    setActiveTab?.(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <footer className="bg-[linear-gradient(35deg,#008080,#0d9488)] text-white pt-16 pb-8 border-t border-teal-600">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Brand Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">✈️</span>
-              <div>
-                <h3 className="text-xl font-extrabold tracking-wide">Ganesh Yatra</h3>
-                <span className="text-xs font-semibold text-teal-200 block uppercase tracking-wider">Tourism</span>
-              </div>
+    <footer className="bg-ink text-white">
+      <div className="mx-auto max-w-7xl px-4 pb-28 pt-14 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <button type="button" onClick={() => handleClick("home")} className="flex items-center gap-3 cursor-pointer">
+              <img src={logo} alt="" className="h-12 w-12 rounded-full object-cover ring-2 ring-gold" />
+              <span className="text-left leading-none">
+                <span className="block text-lg font-extrabold tracking-wide">{t.brand}</span>
+                <span className="mt-1 block text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                  {t.brandSub}
+                </span>
+              </span>
+            </button>
+            <p className="mt-4 font-script-mr text-base text-gold">{contactInfo.tagline}</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/75">
+              {lang === "mr"
+                ? "अमरावती, महाराष्ट्र येथून ग्रुप टूर, कौटुंबिक सुट्ट्या आणि तीर्थयात्रा."
+                : "Group tours, family holidays and pilgrimage yatras from Amravati, Maharashtra."}
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-gold"
+              >
+                <Icon name="instagram" className="h-5 w-5" />
+                {contactInfo.instagramHandle}
+              </a>
+              <a
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ganesh Yatra on Facebook"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white transition hover:bg-white/10 hover:text-gold"
+              >
+                <Icon name="facebook" className="h-5 w-5" />
+              </a>
             </div>
-            <p className="text-teal-50 text-sm leading-relaxed italic">
-              "चला सहलीला, गणेश टूरिझम आहे ना साथीला!"
-            </p>
-            <p className="text-teal-100 text-xs leading-relaxed">
-              Your trusted travel partner based in Amravati, Maharashtra. We organize domestic, international, and pilgrimage tours.
-            </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="text-base font-bold mb-4 text-teal-200 uppercase tracking-wider">Quick Links</h4>
-            <ul className="space-y-2.5 text-sm">
+            <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-gold">
+              {lang === "mr" ? "द्रुत दुवे" : "Quick Links"}
+            </h2>
+            <ul className="mt-4 space-y-2.5">
               {navLinks.map((link) => (
                 <li key={link.id}>
                   <button
+                    type="button"
                     onClick={() => handleClick(link.id)}
-                    className="text-teal-50 hover:text-white transition-colors cursor-pointer"
+                    className="cursor-pointer text-sm text-white/80 transition hover:text-gold"
                   >
                     {t.nav[link.id]}
                   </button>
@@ -51,80 +72,57 @@ const Footer = ({ setActiveTab }) => {
             </ul>
           </div>
 
-          {/* Our Services */}
           <div>
-            <h4 className="text-base font-bold mb-4 text-teal-200 uppercase tracking-wider">Our Services</h4>
-            <ul className="space-y-2.5 text-sm text-teal-50">
-              {services.map((service) => (
-                <li key={service.title} className="flex items-center gap-2">
-                  <span>✨</span>
-                  <span>{service.title}</span>
+            <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-gold">
+              {lang === "mr" ? "सेवा" : "Services"}
+            </h2>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/80">
+              {services.slice(0, 6).map((service) => (
+                <li key={service.title.en}>
+                  <button
+                    type="button"
+                    onClick={() => handleClick("services")}
+                    className="cursor-pointer text-left transition hover:text-gold"
+                  >
+                    {text(service.title, lang)}
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact Details */}
           <div>
-            <h4 className="text-base font-bold mb-4 text-teal-200 uppercase tracking-wider">Contact Info</h4>
-            <ul className="space-y-3 text-sm text-teal-50">
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5">📍</span>
-                <span>{contactInfo.address}</span>
-              </li>
-              <li className="flex flex-col gap-1">
-                <div className="flex items-start gap-2">
-                  <span className="mt-0.5">📞</span>
-                  <div className="flex flex-col">
-                    {contactInfo.phones.map((phone) => (
-                      <a
-                        key={phone}
-                        href={`tel:${phone.replace(/[\s+]/g, "")}`}
-                        className="hover:text-white transition-colors font-semibold"
-                      >
-                        {phone}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </li>
-              <li className="flex items-center gap-2">
-                <span>✉️</span>
-                <a href={`mailto:${contactInfo.email}`} className="hover:text-white transition-colors break-all">
+            <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-gold">
+              {lang === "mr" ? "संपर्क" : "Contact"}
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm text-white/80">
+              <li className="leading-relaxed">{contactInfo.address}</li>
+              {contactInfo.phones.map((phone) => (
+                <li key={phone}>
+                  <a href={`tel:${phone.replace(/\s/g, "")}`} className="font-semibold hover:text-gold">
+                    {phone}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a href={`mailto:${contactInfo.email}`} className="break-all hover:text-gold">
                   {contactInfo.email}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <span>🌐</span>
-                <a
-                  href={`https://${contactInfo.website}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  {contactInfo.website}
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Slogans Banner */}
-        <div className="border-t border-teal-400/40 py-6 my-6 text-center">
-          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-4 md:gap-x-8 text-xs sm:text-sm font-semibold text-teal-100">
-            {contactInfo.features.map((feature, idx) => (
-              <span key={feature} className="flex items-center gap-2">
-                {idx > 0 && <span className="text-teal-300 hidden sm:inline">•</span>}
-                <span>{feature}</span>
-              </span>
-            ))}
-          </div>
+        <div className="mt-10 flex flex-wrap justify-center gap-x-4 gap-y-2 border-t border-white/10 py-5 text-center text-xs font-semibold text-white/70 sm:text-sm">
+          {contactInfo.features.map((feature) => (
+            <span key={feature}>{feature}</span>
+          ))}
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-teal-400/30 pt-6 text-center text-teal-100 text-xs">
-          <p>&copy; {new Date().getFullYear()} Ganesh Yatra Tourism. All rights reserved.</p>
-        </div>
+        <p className="border-t border-white/10 pt-5 text-center text-xs text-white/55">
+          © {new Date().getFullYear()} Ganesh Yatra Tourism.{" "}
+          {lang === "mr" ? "सर्व हक्क राखीव." : "All rights reserved."}
+        </p>
       </div>
     </footer>
   );

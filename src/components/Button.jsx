@@ -1,17 +1,25 @@
 const variants = {
   primary:
-    "bg-[linear-gradient(35deg,#1e293b,#0d9488)] hover:bg-[linear-gradient(35deg,#0d9488,#ffffff)] text-white hover:text-slate-900 border border-[#27374D] shadow-lg shadow-teal-900/20",
+    "bg-brand hover:bg-brand-dark text-white border border-brand-dark shadow-lg shadow-brand/25",
   secondary:
-    "bg-[linear-gradient(35deg,#0d9488,#ffffff)] hover:bg-[linear-gradient(35deg,#ffffff,#0d9488)] text-slate-800 hover:text-white border border-slate-200 shadow-md",
+    "bg-white hover:bg-brand-soft text-ink border border-brand shadow-md",
   outline:
-    "bg-transparent hover:bg-teal-50 text-teal-800 hover:text-teal-900 border-2 border-teal-600 shadow-sm",
+    "bg-transparent hover:bg-brand text-brand hover:text-white border-2 border-brand shadow-sm",
 };
 
-const Button = ({ children, variant = "primary", onClick, type = "button", className = "" }) => (
+const Button = ({
+  children,
+  variant = "primary",
+  onClick,
+  type = "button",
+  className = "",
+  disabled = false,
+}) => (
   <button
     type={type}
     onClick={onClick}
-    className={`inline-flex items-center justify-center min-w-[140px] px-7 py-3 rounded-full font-semibold text-sm md:text-base transition-all duration-400 hover:-translate-y-0.5 cursor-pointer ${variants[variant]} ${className}`}
+    disabled={disabled}
+    className={`inline-flex items-center justify-center min-w-[140px] px-7 py-3 rounded-full font-semibold text-sm md:text-base transition-all duration-400 hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${variants[variant]} ${className}`}
   >
     {children}
   </button>

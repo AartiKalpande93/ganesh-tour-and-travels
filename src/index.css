@@ -1,15 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0ea5e9;
-  --color-primary-dark: #0369a1;
-  --color-primary-light: #7dd3fc;
-  --color-accent: #f97316;
-  --color-accent-dark: #dc6803;
-  --color-accent-light: #fb923c;
-  --color-forest: #15803d;
-  --color-sand: #fff8e7;
-  --color-dark-slate: #1f2937;
+  --color-brand: #e10600;
+  --color-brand-dark: #b80500;
+  --color-brand-soft: #fff1ef;
+  --color-ink: #141414;
+  --color-muted: #5c564f;
+  --color-cream: #fff8f2;
+  --color-sand: #fff3e6;
+  --color-sky: #2b9fe0;
+  --color-sky-dark: #1a73b5;
+  --color-sky-soft: #e7f6fc;
+  --color-gold: #f5c518;
+  --color-gold-deep: #c8960a;
+  --color-sunset: #f08a1a;
+  --color-sunset-soft: #fff4e4;
+  --color-palm: #2e8b3a;
+  --color-palm-dark: #246f2e;
+  --color-palm-soft: #e8f6ea;
+  --color-line: #eadfd4;
 }
 
 * {
@@ -23,9 +32,35 @@ html {
 body {
   margin: 0;
   font-family: "Outfit", "Mukta", "Segoe UI", system-ui, sans-serif;
-  color: var(--color-dark-slate);
+  color: var(--color-ink);
   min-height: 100vh;
   background: #ffffff;
+  overflow-x: clip;
+}
+
+#root {
+  overflow-x: clip;
+}
+
+section[id] {
+  scroll-margin-top: 4.75rem;
+}
+
+img {
+  max-width: 100%;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease;
 }
 
 .font-display {
@@ -63,5 +98,6 @@ select {
 }
 
 ::selection {
-  background: rgba(14, 165, 233, 0.2);
+  background: rgba(225, 6, 0, 0.18);
+  color: #141414;
 }

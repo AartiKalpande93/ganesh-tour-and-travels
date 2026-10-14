@@ -14,24 +14,25 @@ const configuredOrigins = env.clientUrl
 const localDevOrigin = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
 
 const corsOrigin = (origin, callback) => {
-  if (!origin || configuredOrigins.includes(origin)) {
-    callback(null, true);
-    return;
-  }
-
-  if (env.nodeEnv !== "production" && localDevOrigin.test(origin)) {
-    callback(null, true);
+  if (!origin || configuredOrigins.includes(origin) || localDevOrigin.test(origin)) {
+    callback(null, origin || true);
     return;
   }
 
   callback(null, false);
 };
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Private-Network", "true");
+  next();
+});
+
 app.use(
   cors({
     origin: corsOrigin,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Accept"],
+    optionsSuccessStatus: 204,
   })
 );
 

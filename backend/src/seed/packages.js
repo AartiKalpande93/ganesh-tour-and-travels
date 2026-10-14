@@ -400,4 +400,36 @@ export const seedPackages = [
     description: "Enjoy shopping festivals, theme parks, and stunning beaches in Dubai.",
     duration: "6 Days / 5 Nights",
   }),
+  enrich({
+    title: "Europe Delight Tour",
+    destination: "Europe",
+    date: "Dates on request",
+    price: 275000,
+    note: "All Inclusive",
+    type: "International",
+    category: "Dates on request",
+    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
+    description:
+      "Explore Switzerland, Germany, the Netherlands, Belgium and France on a memorable 12-day European journey.",
+    duration: "12 Days / 11 Nights",
+    highlights: [
+      "Zurich arrival and Swiss Alpine scenery",
+      "Grindelwald and Interlaken, with optional Jungfraujoch excursion",
+      "Mount Titlis and Lucerne sightseeing",
+      "Rhine Falls and the Black Forest",
+      "Amsterdam canals, Brussels landmarks and Paris city tour",
+      "Disneyland Paris or a relaxed day in Paris",
+    ],
+    inclusions: [
+      "All-inclusive tour package for 12 days / 11 nights, as per the confirmed itinerary",
+      "Hotel stays and meals as specified in the final tour plan",
+      "Transfers and sightseeing included in the confirmed itinerary",
+      "Tour coordination and assistance during the journey",
+    ],
+    exclusions: [
+      "Optional Jungfraujoch excursion unless included in the confirmed package",
+      "Personal expenses and shopping",
+      "Travel insurance and expenses not specified in the confirmed inclusions",
+    ],
+  }),
 ];

@@ -6,8 +6,10 @@ import { seedPackagesIfEmpty } from "./utils/seedPackagesIfEmpty.js";
 
 const startServer = async () => {
   validateEnv();
-  await connectDB();
-  await seedPackagesIfEmpty();
+  const dbConnected = await connectDB();
+  if (dbConnected) {
+    await seedPackagesIfEmpty();
+  }
   await verifyEmailTransport();
 
   if (!isSmtpConfigured()) {

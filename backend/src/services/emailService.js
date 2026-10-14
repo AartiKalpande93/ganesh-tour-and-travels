@@ -113,10 +113,48 @@ export const sendContactEmail = async (contact) => {
       html,
     });
 
+    let confirmationEmailSent = true;
+    let confirmationMessageId;
+
+    try {
+      const confirmation = await mailer.sendMail({
+        from: `"${env.smtp.fromName}" <${env.smtp.fromEmail}>`,
+        to: email,
+        replyTo: env.contactToEmail,
+        subject: `We received your inquiry — ${destination}`,
+        text: [
+          `Hello ${name},`,
+          "",
+          "Thank you for contacting Ganesh Tour and Travels. We have received your inquiry and will contact you soon.",
+          "",
+          `Destination / Package: ${destination}`,
+          `Your message: ${message}`,
+          "",
+          "If you need to add information, reply to this email.",
+        ].join("\n"),
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #0369A1;">Thank you for contacting Ganesh Tour and Travels</h2>
+            <p>Hello ${escapeHtml(name)},</p>
+            <p>We have received your inquiry and will contact you soon.</p>
+            <p><strong>Destination / Package:</strong> ${escapeHtml(destination)}</p>
+            <p><strong>Your message:</strong></p>
+            <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
+          </div>
+        `,
+      });
+      confirmationMessageId = confirmation.messageId;
+    } catch (error) {
+      confirmationEmailSent = false;
+      console.error("Contact confirmation email error:", error.message);
+    }
+
     return {
       messageId: info.messageId,
       accepted: info.accepted,
       response: info.response,
+      confirmationEmailSent,
+      confirmationMessageId,
     };
   } catch (error) {
     console.error("Nodemailer send error:", error.message);
