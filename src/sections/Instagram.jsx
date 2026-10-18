@@ -1,5 +1,5 @@
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL, popularJourneys } from "../data/siteData";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Icon } from "../components/Icons";
 import groupPhoto from "../assets/home2.jpeg";
 import travelPhoto from "../assets/home1.jpeg";

@@ -1,7 +1,7 @@
 import SectionTitle from "../components/SectionTitle";
 import { Icon } from "../components/Icons";
 import { whyChooseUs, text } from "../data/siteData";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 
 const copy = {
   en: {

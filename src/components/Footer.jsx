@@ -1,5 +1,5 @@
 import { navLinks, services, contactInfo, FACEBOOK_URL, text, INSTAGRAM_URL } from "../data/siteData";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Icon } from "./Icons";
 import logo from "../assets/logo.png";
 

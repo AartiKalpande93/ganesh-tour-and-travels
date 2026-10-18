@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { contactInfo, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../data/siteData";
 import { Icon } from "../components/Icons";
 import heroImage from "../assets/home2.jpeg";

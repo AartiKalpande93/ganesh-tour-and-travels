@@ -178,7 +178,7 @@ export const galleryImages = [
 ];
 
 export const contactInfo = {
-  phones: ["+91 97638 76734", "+91 70582 55525", "+91 93701 57499"],
+  phones: ["+91 97638 76734",  "+91 93701 57499"],
   email: "travelganeshyaatra@gmail.com",
   address: "Shop no 26, AMC Complex, Rajapeth, Amravati, Maharashtra",
   website: "www.ganeshyatratourism.com",

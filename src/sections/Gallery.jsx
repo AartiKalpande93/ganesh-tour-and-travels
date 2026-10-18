@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SectionTitle from "../components/SectionTitle";
 import GalleryItem from "../components/GalleryItem";
 import { galleryImages, text } from "../data/siteData";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Icon } from "../components/Icons";
 
 const copy = {

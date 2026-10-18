@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { navLinks, contactInfo, FACEBOOK_URL, INSTAGRAM_URL } from "../data/siteData";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { Icon } from "./Icons";
 import logo from "../assets/logo.png";
 

@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { Icon } from "../components/Icons";
 import { contactInfo, INSTAGRAM_URL } from "../data/siteData";
 import { submitContactForm } from "../api/contact";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 
 const initialForm = {
   name: "",

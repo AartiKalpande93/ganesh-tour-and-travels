@@ -1,13 +1,13 @@
 import { env } from "../config/env.js";
 
-export const notFound = (req, res, next) => {
+export const notFound = (req, res) => {
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.originalUrl}`,
   });
 };
 
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, _next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || "Internal server error";
   let errors = err.errors || null;

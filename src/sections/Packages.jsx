@@ -3,7 +3,7 @@ import SectionTitle from "../components/SectionTitle";
 import PackageCard from "../components/PackageCard";
 import TourDetailsModal from "../components/TourDetailsModal";
 import { fetchPackages } from "../api/packages";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import { seedPackages } from "../../backend/src/seed/packages.js";
 import { comparePackages } from "../../backend/src/utils/packageOrder.js";
 

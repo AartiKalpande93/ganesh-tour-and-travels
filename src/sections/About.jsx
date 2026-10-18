@@ -1,4 +1,4 @@
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/useLanguage";
 import SectionTitle from "../components/SectionTitle";
 import { Icon } from "../components/Icons";
 import teamImg from "../assets/team.jpeg";
