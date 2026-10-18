@@ -48,23 +48,25 @@ const Instagram = () => {
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold">{c.eyebrow}</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{c.title}</h2>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">{c.text}</p>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-gold"
-              >
-                <Icon name="instagram" className="h-5 w-5" />
-                {INSTAGRAM_HANDLE}
-              </a>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand px-6 text-sm font-bold text-white transition hover:bg-brand-dark"
-              >
-                {c.button}
-              </a>
+              <div className="mt-4 flex flex-col items-start gap-4">
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-gold"
+                >
+                  <Icon name="instagram" className="h-5 w-5" />
+                  {INSTAGRAM_HANDLE}
+                </a>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand px-6 text-sm font-bold text-white transition hover:bg-brand-dark"
+                >
+                  {c.button}
+                </a>
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-2 p-4 sm:p-6 lg:grid-cols-1">
               {photos.map((photo) => (
