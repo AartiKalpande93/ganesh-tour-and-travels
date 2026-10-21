@@ -37,7 +37,7 @@ const Header = ({ activeTab, setActiveTab }) => {
         scrolled ? "shadow-md" : ""
       }`}
     >
-      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6 lg:px-8">
         <button
           type="button"
           onClick={() => handleNavClick("home")}
@@ -81,7 +81,7 @@ const Header = ({ activeTab, setActiveTab }) => {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
           <div className="hidden items-center gap-1 text-xs font-semibold sm:flex">
             <button
               type="button"
@@ -109,7 +109,7 @@ const Header = ({ activeTab, setActiveTab }) => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Ganesh Yatra on Instagram"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-brand-soft hover:text-brand"
+            className="hidden h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-brand-soft hover:text-brand xl:inline-flex"
           >
             <Icon name="instagram" className="h-5 w-5" />
           </a>
@@ -118,7 +118,7 @@ const Header = ({ activeTab, setActiveTab }) => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Ganesh Yatra on Facebook"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-brand-soft hover:text-brand"
+            className="hidden h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-brand-soft hover:text-brand xl:inline-flex"
           >
             <Icon name="facebook" className="h-5 w-5" />
           </a>
@@ -132,13 +132,13 @@ const Header = ({ activeTab, setActiveTab }) => {
           </button>
 
           <div className="hidden items-center gap-2 text-sm font-semibold text-ink 2xl:flex">
-            {contactInfo.phones.slice(0, 2).map((phone, index) => (
+            {contactInfo.phones.slice(0, 2).map((phone) => (
               <a
                 key={phone}
                 href={`tel:${phone.replace(/[\s]/g, "")}`}
                 className="transition hover:text-brand"
               >
-                {index === 0 ? phone.replace("+91 ", "") : phone.replace("+91 ", "")}
+                {phone.replace("+91 ", "")}
               </a>
             ))}
           </div>
@@ -149,6 +149,7 @@ const Header = ({ activeTab, setActiveTab }) => {
             className="inline-flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full cursor-pointer xl:hidden"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
           >
             <span className={`block h-0.5 w-5 bg-ink transition ${isOpen ? "translate-y-2 rotate-45" : ""}`} />
             <span className={`block h-0.5 w-5 bg-ink transition ${isOpen ? "opacity-0" : ""}`} />
@@ -157,16 +158,29 @@ const Header = ({ activeTab, setActiveTab }) => {
         </div>
       </div>
 
+      <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-3 pb-2 2xl:hidden">
+        {contactInfo.phones.map((phone) => (
+          <a
+            key={phone}
+            href={`tel:${phone.replace(/[\s]/g, "")}`}
+            className="inline-flex min-h-9 min-w-0 flex-1 items-center justify-center gap-1 rounded-full bg-brand-soft px-2 text-xs font-semibold text-brand transition hover:bg-brand/10 sm:text-sm"
+          >
+            <Icon name="phone" className="h-3.5 w-3.5 shrink-0" />
+            <span className="whitespace-nowrap">{phone.replace("+91 ", "")}</span>
+          </a>
+        ))}
+      </div>
+
       {isOpen && (
-        <div className="fixed inset-x-0 bottom-0 top-[4.5rem] z-40 xl:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[7.25rem] z-40 2xl:top-[4.5rem] xl:hidden">
           <button
             type="button"
             className="absolute inset-0 bg-ink/40"
             aria-label="Close menu"
             onClick={() => setIsOpen(false)}
           />
-          <nav className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl">
-            <div className="flex-1 overflow-y-auto px-4 py-4">
+          <nav id="mobile-navigation" className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl">
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
               {navLinks.map((link) => (
                 <button
                   key={link.id}
@@ -181,7 +195,19 @@ const Header = ({ activeTab, setActiveTab }) => {
               ))}
             </div>
 
-            <div className="space-y-3 border-t border-line px-4 py-4">
+            <div className="shrink-0 space-y-3 overflow-y-auto border-t border-line px-4 py-4 max-h-[65vh]">
+              <div className="space-y-2">
+                {contactInfo.phones.map((phone) => (
+                  <a
+                    key={phone}
+                    href={`tel:${phone.replace(/[\s]/g, "")}`}
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-soft px-3 text-sm font-semibold text-brand"
+                  >
+                    <Icon name="phone" className="h-4 w-4 shrink-0" />
+                    {phone.replace("+91 ", "")}
+                  </a>
+                ))}
+              </div>
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <button
                   type="button"

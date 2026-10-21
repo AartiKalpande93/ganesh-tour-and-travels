@@ -12,6 +12,27 @@ const localPackages = seedPackages.map((pkg, index) => ({
   id: `seed-${index}`,
 }));
 
+const withTourImages = (packages) =>
+  packages.map((pkg) => {
+    if (
+      pkg.title === "Assam - Meghalaya Arunachal" &&
+      pkg.date === "01 DEC - 12 DEC" &&
+      pkg.category === "September - December 2026"
+    ) {
+      return { ...pkg, image: "/assam-meghalaya-arunachal.jpg" };
+    }
+
+    if (
+      pkg.title === "Rajasthan Tour" &&
+      pkg.date === "04 JAN - 14 JAN" &&
+      pkg.category === "New Year Tour"
+    ) {
+      return { ...pkg, image: "/rajasthan-tour.png" };
+    }
+
+    return pkg;
+  });
+
 const FAMILY_PATTERN = /kerala|rajasthan|rajsthan|gujarat|himachal|andaman|kashmir/i;
 const MONTH_NUMBERS = {
   JAN: 1,
@@ -89,9 +110,9 @@ const Packages = () => {
     try {
       const response = await fetchPackages();
       const live = Array.isArray(response.data) ? response.data : [];
-      setPackages(live.length > 0 ? live : localPackages);
+      setPackages(withTourImages(live.length > 0 ? live : localPackages));
     } catch {
-      setPackages(localPackages);
+      setPackages(withTourImages(localPackages));
     } finally {
       setLoading(false);
     }
