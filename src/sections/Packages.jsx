@@ -12,26 +12,189 @@ const localPackages = seedPackages.map((pkg, index) => ({
   id: `seed-${index}`,
 }));
 
-const withTourImages = (packages) =>
-  packages.map((pkg) => {
-    if (
-      pkg.title === "Assam - Meghalaya Arunachal" &&
-      pkg.date === "01 DEC - 12 DEC" &&
-      pkg.category === "September - December 2026"
-    ) {
-      return { ...pkg, image: "/assam-meghalaya-arunachal.jpg" };
-    }
+// Every tour card must show a photo of the place it actually visits.
+// Order matters: combined tours (e.g. Kerala + Rameshwaram + Madurai)
+// are matched before their single-destination counterparts.
+// Destinations with several departures (Dubai, Rajasthan, ...) list
+// multiple photos: duplicate cards take the next photo in turn, so
+// no two cards show the same image while variants remain.
+// Local files in /public keep cards correct even when the live
+// database still holds an old, unrelated image URL.
+const destinationPhotos = [
+  {
+    pattern: /rameshwaram|madurai/i,
+    image: "/madurai-meenakshi-temple.jpg",
+    credit: "Bernard Gagnon · CC BY-SA 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:Madurai,_India.jpg",
+  },
+  {
+    pattern: /rameshwaram|madurai/i,
+    image: "/rameshwaram-pamban-bridge.jpg",
+    credit: "Shaswat Nimesh · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Pamban_Bridge_Train_Passing.jpg",
+  },
+  {
+    pattern: /rameshwaram|madurai/i,
+    image: "/madurai-meenakshi-gopuram.jpg",
+    credit: "Rahuljeswin · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Madurai_Meenakshi_Amman_Koil_Temple_Tower_2.JPG",
+  },
+  {
+    pattern: /thailand|singapore|malaysia/i,
+    image: "/thailand-singapore-malaysia.jpg",
+    credit: "Benh LIEU SONG · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Singapore_Marina_Bay_Dusk_2018-02-27.jpg",
+  },
+  {
+    pattern: /thailand|singapore|malaysia/i,
+    image: "/malaysia-petronas-towers.jpg",
+    credit: "Vyacheslav Argenberg · CC BY 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Kuala_Lumpur,_Malaysia,_Petronas_Towers_at_night,_glitter.jpg",
+  },
+  {
+    pattern: /assam|meghalaya|arunachal/i,
+    image: "/assam-meghalaya-root-bridge.jpg",
+    credit: "PJeganathan · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Living_root_bridges_of_Nongriat_village_in_East_Khasi_Hills_district,_Meghalaya_JEG7387.jpg",
+  },
+  {
+    pattern: /chardham|char dham|kedarnath/i,
+    image: "/chardham-kedarnath-temple.jpg",
+    credit: "Yogabrata Chakraborty · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Kedarnath_Temple_in_Uttarakhand,_India,_photo_by_Yogabrata_Chakraborty.jpg",
+  },
+  {
+    pattern: /ladakh/i,
+    image: "/ladakh-pangong-golden.jpg",
+    credit: "Kashmir photographer · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Pangong_Glacial_Lake2_(Ladakh-India).jpg",
+  },
+  {
+    pattern: /kashmir/i,
+    image: "/kashmir-dal-lake.jpg",
+    credit: "Dashrathgoyal85 · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Dal_Lake,_Srinagar,_Jammu_and_Kashmir.jpg",
+  },
+  {
+    pattern: /gujarat/i,
+    image: "/gujarat-dwarka-temple.jpg",
+    credit: "Kakarrote · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Rukmini_Temple,_Dwarka,_Gujarat.jpg",
+  },
+  {
+    pattern: /andaman/i,
+    image: "/andaman-havelock-turquoise.jpg",
+    credit: "Vyacheslav Argenberg · CC BY 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Havelock_Island,_Mangrove_tree_on_the_beach,_Andaman_Islands.jpg",
+  },
+  {
+    pattern: /andaman/i,
+    image: "/andaman-cellular-jail.jpg",
+    credit: "Jomesh · CC BY 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:Front_View_of_Cellular_Jail,_Port_Blair.JPG",
+  },
+  {
+    pattern: /rajasthan|rajsthan/i,
+    image: "/rajasthan-hawa-mahal.png",
+  },
+  {
+    pattern: /rajasthan|rajsthan/i,
+    image: "/rajasthan-amber-fort.jpg",
+    credit: "A.Savin · FAL",
+    source: "https://commons.wikimedia.org/wiki/File:Jaipur_03-2016_02_Amber_Fort.jpg",
+  },
+  {
+    pattern: /rajasthan|rajsthan/i,
+    image: "/rajasthan-jaisalmer-desert.jpg",
+    credit: "Wikimedia Commons · CC BY-SA 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:Thar_Khuri.jpg",
+  },
+  {
+    pattern: /rajasthan|rajsthan/i,
+    image: "/rajasthan-udaipur-palace.jpg",
+    credit: "Hirumon · CC BY 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:City_Palace_Udaipur_Rajasthan_India.JPG",
+  },
+  {
+    pattern: /kerala/i,
+    image: "/kerala-backwaters.jpg",
+    credit: "Ingo Mehling · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Nedumudy_-_Houseboat.jpg",
+  },
+  {
+    pattern: /bhutan/i,
+    image: "/bhutan-tigers-nest.jpg",
+    credit: "Nina R · CC BY 2.0",
+    source: "https://commons.wikimedia.org/wiki/File:Paro_Taktsang,_Bhutan_(edited).jpg",
+  },
+  {
+    pattern: /dubai/i,
+    image: "/dubai-burj-khalifa.jpg",
+    credit: "Tim Reckmann · CC BY 2.0",
+    source: "https://commons.wikimedia.org/wiki/File:Dubai_Skyline_mit_Burj_Khalifa_(18241030269).jpg",
+  },
+  {
+    pattern: /dubai/i,
+    image: "/dubai-marina.jpg",
+    credit: "Khanshahab06 · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Dubai_Marina_Skyline_93.jpg",
+  },
+  {
+    pattern: /dubai/i,
+    image: "/dubai-desert-safari.jpg",
+    credit: "Siddeshindia · CC BY-SA 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:Desert_Safari_-_Dubai.JPG",
+  },
+  {
+    pattern: /bali/i,
+    image: "/bali-temple.jpg",
+    credit: "Anandajoti Bhikkhu · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:024_Temple_Gardens,_Pura_Ulun_Danu_Beratan,_Bali,_photograph_by_Anandajoti_Bhikkhu.jpg",
+  },
+  {
+    pattern: /nepal/i,
+    image: "/nepal-pokhara-himalaya.jpg",
+    credit: "Abishkar Gautam · CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:Phewa_Lake_in_Pokhara,_Nepal.jpg",
+  },
+  {
+    pattern: /himachal/i,
+    image: "/himachal-manali.jpg",
+    credit: "Biswarup Ganguly · CC BY 3.0",
+    source: "https://commons.wikimedia.org/wiki/File:Beas_Valley_-_Palchan_-_Kullu_2014-05-10_(edit).jpg",
+  },
+  {
+    pattern: /europe/i,
+    image: "/europe-eiffel-tower.jpg",
+    credit: "Getfunky Paris · CC BY 2.0",
+    source: "https://commons.wikimedia.org/wiki/File:Eiffel_Tower_and_Pont_Alexandre_III_at_night.jpg",
+  },
+];
 
-    if (
-      pkg.title === "Rajasthan Tour" &&
-      pkg.date === "04 JAN - 14 JAN" &&
-      pkg.category === "New Year Tour"
-    ) {
-      return { ...pkg, image: "/rajasthan-tour.png" };
-    }
+const withDestinationPhotos = (packages) => {
+  const seen = new Map();
 
-    return pkg;
+  return packages.map((pkg) => {
+    const destination = `${pkg.destination || ""} ${pkg.title || ""}`;
+    const first = destinationPhotos.find(({ pattern }) => pattern.test(destination));
+    if (!first) return pkg;
+
+    // All photos listed for this destination, in listed order.
+    const variants = destinationPhotos.filter(
+      ({ pattern }) => pattern.source === first.pattern.source
+    );
+    const count = seen.get(first.pattern.source) || 0;
+    seen.set(first.pattern.source, count + 1);
+    const photo = variants[count % variants.length];
+
+    return {
+      ...pkg,
+      image: photo.image,
+      imageCredit: photo.credit,
+      imageCreditUrl: photo.source,
+    };
   });
+};
 
 const FAMILY_PATTERN = /kerala|rajasthan|rajsthan|gujarat|himachal|andaman|kashmir/i;
 const MONTH_NUMBERS = {
@@ -110,9 +273,9 @@ const Packages = () => {
     try {
       const response = await fetchPackages();
       const live = Array.isArray(response.data) ? response.data : [];
-      setPackages(withTourImages(live.length > 0 ? live : localPackages));
+      setPackages(withDestinationPhotos(live.length > 0 ? live : localPackages));
     } catch {
-      setPackages(withTourImages(localPackages));
+      setPackages(withDestinationPhotos(localPackages));
     } finally {
       setLoading(false);
     }

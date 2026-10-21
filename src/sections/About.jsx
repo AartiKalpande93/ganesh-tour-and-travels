@@ -20,8 +20,8 @@ const copy = {
       { icon: "comfort", text: "Comfortable journeys" },
       { icon: "support", text: "A team you can call" },
     ],
-    badgeTitle: "Amravati",
-    badgeSub: "Maharashtra",
+    // badgeTitle: "Amravati",
+    // badgeSub: "Maharashtra",
   },
   mr: {
     eyebrow: "आमच्याबद्दल",
@@ -39,8 +39,6 @@ const copy = {
       { icon: "comfort", text: "आरामदायक वाटचाल" },
       { icon: "support", text: "संपर्क करता येणारी टीम" },
     ],
-    badgeTitle: "अमरावती",
-    badgeSub: "महाराष्ट्र",
   },
 };
 
@@ -60,10 +58,6 @@ const About = () => {
               alt={lang === "mr" ? "गणेश यात्रा प्रवासी ग्रुप" : "Ganesh Yatra travellers on a group tour"}
               className="h-72 w-full rounded-3xl object-cover shadow-lg ring-1 ring-line sm:h-96"
             />
-            <div className="absolute -bottom-4 right-4 rounded-2xl bg-brand px-5 py-3 text-white shadow-lg sm:bottom-4">
-              <p className="text-lg font-bold leading-none">{c.badgeTitle}</p>
-              <p className="mt-1 text-xs font-medium text-white/90">{c.badgeSub}</p>
-            </div>
           </div>
 
           <div>

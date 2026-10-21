@@ -336,6 +336,17 @@ const TourDetailsModal = ({ tour, onClose }) => {
             <div className="absolute top-4 right-4 bg-brand text-white px-5 py-2 rounded-2xl font-black text-xl shadow-xl">
               {formattedPrice}
             </div>
+            {tour.imageCredit && tour.imageCreditUrl && (
+              <a
+                href={tour.imageCreditUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Photo credit: ${tour.imageCredit}. View image source and license.`}
+                className="absolute bottom-2 right-3 rounded-md bg-black/60 px-2 py-1 text-[10px] text-white/90 transition hover:bg-black/80"
+              >
+                Photo: {tour.imageCredit}
+              </a>
+            )}
           </div>
 
           {/* Quick Info Grid Cards */}

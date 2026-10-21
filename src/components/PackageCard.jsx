@@ -19,6 +19,8 @@ const PackageCard = ({
   inclusions,
   exclusions,
   available,
+  imageCredit,
+  imageCreditUrl,
   onViewDetails,
 }) => {
   const handleViewDetails = () => {
@@ -39,6 +41,8 @@ const PackageCard = ({
       inclusions,
       exclusions,
       available,
+      imageCredit,
+      imageCreditUrl,
     };
 
     if (onViewDetails) {
@@ -80,6 +84,17 @@ const PackageCard = ({
         <div className={`absolute top-4 right-4 text-xs font-bold px-3 py-1.5 rounded-full border shadow-sm ${typeColors[type] || "bg-cream text-ink"}`}>
           {type}
         </div>
+        {imageCredit && imageCreditUrl && (
+          <a
+            href={imageCreditUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Photo credit: ${imageCredit}. View image source and license.`}
+            className="absolute bottom-2 left-2 rounded-md bg-black/60 px-2 py-1 text-[10px] text-white/90 transition hover:bg-black/80"
+          >
+            Photo: {imageCredit}
+          </a>
+        )}
       </div>
       
       <div className="p-6 flex flex-col flex-grow justify-between">
